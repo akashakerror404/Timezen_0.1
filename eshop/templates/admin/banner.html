@@ -1,0 +1,92 @@
+{% extends 'baseadmin.html' %}
+{% load static %}
+{% block title %}
+add_product
+{% endblock %}
+{% block link %}
+<style>
+    .custom-button {
+  display: inline-block;
+  padding: 10px 30px;
+  background-color: #42f5d4;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.custom-button:hover {
+  background-color: #36c5ac;
+}
+
+.custom-button:active {
+  background-color: #2ba48f;
+}
+
+</style>
+{% endblock %}
+
+{% block content %}
+<br>
+<br>
+<br>
+
+<div class="container">
+    <h1>Add Banner</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="exampleInputImage" class="form-label">Display Image</label>
+            <input type="file" class="form-control" name="image" id="exampleInputImage" required>
+        </div>
+        <!-- Add the image preview container -->
+        <img id="imagePreview" src="#" alt="Image Preview" style="display: none; max-width: 300px;">
+        <br>
+        <br>
+        
+        <button type="submit" class="custom-button">Add Banner</button>
+    </form>
+
+    <h2>Existing Banners</h2>
+    <div class="row">
+        {% for image in images %}
+        <div class="col-md-3">
+            <img src="{{ image.image.url }}" class="img-thumbnail" alt="Banner Image">
+            <form method="post" action="{% url 'delete_image' image.pk %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger mt-2">Delete</button>
+            </form>
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+{% block scripts %}
+<script>
+    // Function to show the image preview
+    function showImagePreview(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                const imagePreview = document.getElementById('imagePreview');
+                imagePreview.src = e.target.result;
+                imagePreview.style.display = 'block';
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    // Bind an event listener to the file input
+    const inputImage = document.getElementById('exampleInputImage');
+    inputImage.addEventListener('change', function() {
+        showImagePreview(this);
+    });
+</script>
+{% endblock %}
+
+{% endblock %}

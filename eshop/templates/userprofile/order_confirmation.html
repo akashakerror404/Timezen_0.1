@@ -1,0 +1,180 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Order Confirmation
+{% endblock %}
+
+{% block link %}
+
+
+{% endblock %}
+{% block user %}
+
+<a href="{% url 'userprofile'  %}" class="btn border">
+    <i class="fa fa-user" aria-hidden="true" style="color: #F1B709;"></i>
+    <span class="badge">{{user}}</span>
+</a>
+    
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5 mb-5">
+    <div class="row d-flex justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                        <h1 class="m-0 display-5 font-weight-semi-bold"><span class="text-primary font-weight-bold border px-3 mr-1">TIME</span>ZEN</h1>
+                <div class="invoice p-5">
+                    <h5>Your Order Confirmed!</h5>
+                    <span class="font-weight-bold d-block mt-4">Hy {{user}}</span>
+                    <span>Your order has been confirmed and will be shipped in the next two days!</span>
+                    <div class="payment border-top mt-3 mb-3 border-bottom table-responsive">
+                        <table class="table table-borderless">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="py-2">
+                                            <span class="d-block text-muted">Order Date</span>
+                                            <span>{{ order.order_date|date:"F d, Y" }}</span>
+                                        </div>
+                                        
+                                    </td>
+                                    <td>
+                                        <div class="py-2">
+                                            <span class="d-block text-muted">Order No</span>
+                                            <span>{{ order.id }}</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <!-- <div class="py-2">
+                                            <span class="d-block text-muted">Payment</span>
+                                            <span><img src="https://img.icons8.com/color/48/000000/mastercard.png" width="20"></span>
+                                        </div> -->
+                                    </td>
+                                    <td>
+                                        <div class="py-2">
+                                            <span class="d-block text-muted">Shipping Address</span>
+                                            <span>{{ order.address.first_name }}{{ order.address.last_name }}</span>
+                                            <span>{{ order.address.address }}</span>
+                                            <span>{{ order.address.city }}  </span>
+                                            <span>{{ order.address.country }},{{ order.address.state }},</span>
+                                            <span>{{ order.address.pincode }}</span>
+
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="product border-bottom table-responsive">
+                        <table class="table table-borderless">
+                            <tbody>
+                                <tr>
+                                    {% for item in order.orderlist_set.all %}
+                                    <td width="20%">
+                                        <img src="{{ item.product.displayimage.url }}" width="90">
+                                    </td>
+                                    <td width="60%">
+                                        <span class="font-weight-bold">{{ item.product.products.name }}</span>
+                                        <div class="product-qty">
+                                            <span class="d-block">quantity :{{ item.quantity }}</span>
+                                            <span>{{ item.product.colour }}</span>
+                                        </div>
+                                    </td>
+                                    
+                                    <td width="20%">
+                                        <div class="text-right">
+                                            <span class="font-weight-bold">RS : {{  item.product.products.discountprice }}</span>
+                                            {% if item.product.products.category.categoryoffer %}
+                                            <span class="font-weight-bold"> offer : {{ item.product.products.category.categoryoffer }} %</span>
+                                            {% endif %}
+
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="row d-flex justify-content-end">
+                        <div class="col-md-5">
+                            <table class="table table-borderless">
+                                <tbody class="totals">
+                                    <!-- <tr>
+                                        <td>
+                                            <div class="text-left">
+                                                <span class="text-muted">Subtotal</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="text-right">
+                                                <span>{{ order.total_price }}</span>
+                                            </div>
+                                        </td>
+                                    </tr> -->
+                                    <!-- <tr>
+                                        <td>
+                                            <div class="text-left">
+                                                <span class="text-muted">Shipping Fee</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="text-right">
+                                                <span>$22</span>
+                                            </div>
+                                        </td>
+                                    </tr> -->
+                                    <!-- <tr>
+                                        <td>
+                                            <div class="text-left">
+                                                <span class="text-muted">Tax Fee</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="text-right">
+                                                <span>$7.65</span>
+                                            </div>
+                                        </td>
+                                    </tr> -->
+                                    <!-- <tr>
+                                        <td>
+                                            <div class="text-left">
+                                                <span class="text-muted">Discount</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="text-right">
+                                                <span class="text-success">$168.50</span>
+                                            </div>
+                                        </td>
+                                    </tr> -->
+                                    <tr class="border-top border-bottom">
+                                        <td>
+                                            <div class="text-left">
+                                                <span class="font-weight-bold">Subtotal</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="text-right">
+                                                <span class="font-weight-bold">{{ order.total_price }}</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- <p>We will be sending a shipping confirmation email when the item is successfully shipped!</p> -->
+                    <p class="font-weight-bold mb-0">Thanks for shopping with us!</p>
+                    <span>TIME-ZEN</span>
+                </div>
+                <div class="d-flex justify-content-between footer p-3">
+                    <span>TIME-ZEN<a href="/shop">Continue Shopping</a></span>
+                    <!-- <span>12 June, 2020</span> -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

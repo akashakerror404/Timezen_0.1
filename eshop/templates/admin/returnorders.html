@@ -1,0 +1,74 @@
+{% extends 'baseadmin.html' %}
+{% load static %}
+{% block title %}
+canel ordrs{% endblock %}
+{% block link %}
+<style>
+    
+    body { 
+  font-size: 140%; 
+}
+
+h2 {
+  text-align: center;
+  padding: 20px 0;
+}
+
+table caption {
+	padding: .5em 0;
+}
+
+table.dataTable th,
+table.dataTable td {
+  white-space: nowrap;
+}
+
+.p {
+  text-align: center;
+  padding-top: 140px;
+  font-size: 14px;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<br>
+<br>
+<br>
+<h2>Return Orders</h2>
+
+<div class="container">
+    <div class="row">
+      <div class="col-xs-12">
+        <table summary="This table shows how to create responsive tables using Datatables' extended functionality" class="table table-bordered table-hover dt-responsive">
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Username</th>
+              <th>Payment Status</th>
+              <th>City</th>
+              <th>Total Amound</th>
+              <th>Refund</th>
+
+            </tr>
+          </thead>
+          <tbody>
+            {% for order in return_orders %}
+            <tr>
+              <td>{{ order.id }}</td>
+              <td>{{ order.user.username }}</td>
+              <td>{{ order.get_payment_status_display }}</td>
+              <td>{{ order.address.city}}</td>
+              <td>{{ order.total_price }}</td>
+              <td>
+                <a href="{% url 'refund_admin' order.id %}" class="btn btn-primary">Refund amount</a>
+            </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

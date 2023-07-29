@@ -1,0 +1,74 @@
+{%extends 'baseadmin.html'%}
+{% load static %}
+{% block title %}
+Order List
+{% endblock %}
+{% block link %}
+<style>
+.blue-table {
+  background-color: #e9f2fb;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.blue-table th,
+.blue-table td {
+  padding: 8px;
+  text-align: left;
+}
+
+.blue-table th {
+  background-color: #3572b0;
+  color: #fff;
+}
+
+.blue-table img {
+  max-width: 100px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+@media (max-width: 767px) {
+  .blue-table img {
+    max-width: 80px;
+  }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<br>
+<br>
+<br>
+<h1>Product Name :  {{ product.name }}</h1>
+<!-- <p>{{ product.desc }}</p> -->
+
+<h2>Variants:</h2>
+<div class="table-responsive">
+  <table class="blue-table">
+    <thead>
+      <tr>
+        <th>Colour</th>
+        <th>Stock</th>
+        <th>Display Image</th>
+        <th>Edit</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for variant in variants %}
+      <tr>
+        <td>{{ variant.colour.colour }}</td>
+        <td>{{ variant.stock }}</td>
+        <td><img src="{{ variant.displayimage.url }}" alt="Product Image"></td>
+        <td><a href="{% url 'edit_variant' variant.id %}" style="text-decoration: none; color: #007bff; font-weight: bold;">Edit</a></td>
+        
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <td>
+    <a href="{% url 'add_variant' product_id=product.id %}" class="btn btn-primary">Add Variant</a> <!-- Button for adding variant -->
+</td>
+</div>
+{% endblock %}

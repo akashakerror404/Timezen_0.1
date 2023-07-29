@@ -1,0 +1,259 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    User Profile
+{% endblock %}
+{% block link %}
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<style>
+/* Your other CSS styles */
+
+.profile-picture-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.edit-icon {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: #fff;
+    border-radius: 50%;
+    padding: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.edit-icon i {
+    color: #007bff;
+}
+@media (min-width: 769px) {
+        .mobile-toggle-bar {
+            display: none;
+        }
+    }
+
+
+</style>
+{% endblock %}
+
+
+{% block user %}
+    <a href="" class="btn border">
+        <i class="fa fa-user" aria-hidden="true" style="color: #F1B709;"></i>
+        <span class="badge">{{ user }}</span>
+    </a>
+{% endblock %}
+
+{% block content %}
+<section style="background-color: #eee;">
+  <div class="container py-5">
+      <nav aria-label="breadcrumbb" class="bg-light rounded-3 p-3 mb-4">
+          <div class="mobile-toggle-bar">
+              <button id="mobileToggleBtn" class="btn btn-primary" onclick="toggleBreadcrumb()">
+                  <i class="fa fa-bars"></i>
+              </button>
+          </div>
+          <ol id="breadcrumbList" class="breadcrumb mb-0">
+              <!-- Your breadcrumb items -->
+              <li class="item ">
+                  <a href="{% url 'userprofile'  %}">
+                      <button class="btn btn-primary">User profile</button>
+                  </a>
+              </li>
+              <li class="item">
+                  <a href="{% url 'user_orders_list' %}">
+                      <button class="btn btn-primary">Orders</button>
+                  </a>
+              </li>
+
+              <li class="item">
+                  <a href="{% url 'wallet'  %}">
+                      <button class="btn btn-primary">Wallet</button>
+                  </a>
+              </li>
+
+              <li class="item">
+                <a href="{% url 'help'  %}">
+                    <button class="btn btn-primary">Help Center</button>
+                </a>
+            </li>
+          </ol>
+      </nav>
+          
+  
+      <div class="row">
+        <div class="col-lg-4">
+          <div class="card mb-4">
+            <div class="card-body text-center">
+              {% if personal_details.profile_picture %}
+              <div class="profile-picture-wrapper">
+                <img id="upload0" src="{{ personal_details.profile_picture.url }}" alt="avatar"
+                     class="rounded-circle img-fluid" style="width: 150px;" >
+            
+                <a href="#" class="edit-icon" onclick="openFileUpload()">
+                    <i class="fas fa-edit"></i>
+                </a>
+                <input class="file-upload-input d-none" id="profile-picture" type="file" name="images" accept="image/*" onchange="previewImage(event)" />
+            </div>
+            
+              {% else %}
+                  <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar"
+                       class="rounded-circle img-fluid" style="width: 150px;">
+                       <a href="#" class="edit-icon" onclick="openFileUpload()">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                    <input class="file-upload-input d-none" id="profile-picture" type="file" name="images" accept="image/*" onchange="previewImage(event)" />
+                       
+              {% endif %}
+          
+              <h5 class="my-3"> {{ username }}</h5>
+              <p class="text-muted mb-4"> Referal code : {{ user.referral.referral_code }}</p>
+              <p class="text-muted mb-4">{{ email }}</p>
+          
+              <div class="d-flex justify-content-center mb-2">
+                  <a href="{% url 'logout' %}" class="btn btn-primary">Logout</a>
+              </div>
+          </div>
+          
+          </div>
+
+          
+       
+        </div>
+        <div class="col-lg-8">
+            <div class="card mb-4">
+              <div class="card-body">
+               
+          
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <label for="full_name">Full Name</label>
+                    </div>
+                    <div class="col-sm-9">
+                      <input type="text" id="full_name" name="full_name" class="form-control" placeholder="{{ username }}" required>
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <label for="email">Email</label>
+                    </div>
+                    <div class="col-sm-9">
+                      <input type="email" id="email" name="email" class="form-control" placeholder="{{email}}" required>
+                    </div>
+                  </div>
+                  <hr>
+                <form method="POST" action="">
+                    {% csrf_token %}
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <label for="phone">Phone</label>
+                    </div>
+                    <div class="col-sm-9">
+                      <input type="text" id="phone" name="phone" class="form-control" placeholder="{{personal_details.phonenumber}}" required>
+                    </div>
+                  </div>
+                  <hr>
+                 
+                </form>
+
+                  <hr>
+                  
+                  <br>
+          
+                  <div class="d-flex justify-content-end">
+                    <button type="submit" class="btn btn-primary"> Edit</button>
+                  </div>
+              </div>
+            </div>
+          </div>
+          
+      </div>
+    </div>
+  </section>
+  <script>
+    function openFileUpload() {
+        // Trigger the hidden file upload input when the edit icon is clicked
+        $('.file-upload-input').trigger('click');
+    }
+    
+    function previewImage(event) {
+        const input = event.target;
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+    
+            reader.onload = function (e) {
+                // Update the profile picture with the selected image
+                document.getElementById('profile-picture').src = e.target.result;
+                // Upload the image asynchronously to the backend
+                uploadImage(input.files[0]);
+            };
+    
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+    
+    function uploadImage(file) {
+        const formData = new FormData();
+        formData.append('image', file);
+    
+        $.ajax({
+            url: '/update_profile/', // Replace this with the URL of your backend image upload endpoint
+            type: 'POST',
+            headers : {"x-CSRFToken": "{{csrf_token}}" },
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (data) {
+                // Handle the success response from the server, if needed
+
+                console.log('Image uploaded successfully!');
+                const profilePictureElement = document.getElementById('upload0');
+                // profilePictureElement.src = URL.createObjectURL(file); // Update the image source to the uploaded image
+                profilePictureElement.src = URL.createObjectURL(file); // Update the image source to the uploaded image
+// $('#id').text(response.data)
+                
+            },
+            error: function (error) {
+                // Handle the error response from the server, if needed
+               
+                console.error('Error uploading image:', error);
+            }
+        });
+    }
+    </script>
+     <script>
+      // jQuery document ready function
+      $(document).ready(function() {
+          // Toggle mobile menu visibility
+          $("#mobileToggleBtn").click(function() {
+              $(".breadcrumb").toggleClass("show-mobile-menu");
+          });
+      });
+  </script>
+
+  <style>
+      /* Add this in your CSS or style tag */
+      @media (max-width: 768px) {
+          .breadcrumb.show-mobile-menu {
+              display: block;
+          }
+          .mobile-toggle-bar {
+              text-align: right;
+          }
+          #mobileToggleBtn {
+              display: block;
+          }
+          .breadcrumb {
+              display: none;
+          }
+      }
+  </style>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
+
+{% endblock %}

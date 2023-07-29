@@ -1,0 +1,184 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+home
+{% endblock %}
+{% block user %}
+
+
+
+<a href="{% url 'userprofile'  %}" class="btn border">
+    <i class="fa fa-user" aria-hidden="true" style="color: #F1B709;"></i>
+    <span class="badge">{{user}}</span>
+</a>
+    
+{% endblock %}
+{% block content %}
+<div class="container-fluid pt-5">
+    <div class="row px-xl-5">
+        <div class="col-lg-8 table-responsive mb-5">
+            <table class="table table-bordered text-center mb-0">
+                <thead class="bg-secondary text-dark">
+                
+                    <tr>
+                        <th>Products</th>
+                        
+                        <th>Price</th>
+                        
+                       
+
+                        <th>Quantity</th>
+                        <th>Total</th>
+                        <th>Remove</th>
+                    </tr>
+                </thead>
+                {% for product in products %}
+                <tbody class="align-middle">
+                    <form id="quantityForm{{ forloop.counter }}" method="post" action="{% url 'quantity_update' product.product.slug %}">
+                        {% csrf_token %}
+                        <tr>
+                            <td class="align-middle">
+                                <a href="{% url 'product_detail' product.product.slug %}">
+                                    <img src="{{ product.product.displayimage.url }}" alt="" style="width: 50px;">
+                                </a>
+                                {{ product.product.products.name }}
+                            </td>
+                            <td class="align-middle">
+                                {% if product.product.products.discountprice %}
+                                  {{ product.product.products.discountprice }}
+                                {% else %}
+                                  {{ product.product.products.price }}
+                                {% endif %}
+                              </td>
+                                                          <td class="align-middle">
+                                <div class="input-group quantity mx-auto" style="width: 100px;">
+                                    <div class="input-group-prepend">
+                                        <button type="submit" class="btn btn-sm btn-primary btn-minus" onclick="decreaseQuantity('quantityInput{{ forloop.counter }}')">
+                                            <i class="fa fa-minus"></i>
+                                        </button>
+                                    </div>
+                                    <input type="number" class="form-control form-control-sm bg-secondary text-center" id="quantityInput{{ forloop.counter }}" name="quantity" value="{{ product.quantity }}" >
+                                    <div class="input-group-append">
+                                        <button type="submit" class="btn btn-sm btn-primary btn-plus" onclick="increaseQuantity('quantityInput{{ forloop.counter }}')">
+                                            <i class="fa fa-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="align-middle">{{ product.price }}</td>
+                            <td class="align-middle">
+                                <a href="{% url 'delete_cart' product.product.id %}" class="btn btn-sm btn-primary">
+                                    <i class="fa fa-trash"></i> <!-- Use the fa-trash class for the bucket icon -->
+                                </a>
+                            </td>
+                            <!-- <td class="align-middle">
+                                <a href="{% url 'delete_cart' product.product.id %}" class="btn btn-sm btn-primary">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </td> -->
+                        </tr>
+                    </form>
+                </tbody>
+                {% endfor %}
+            </table>
+        </div>
+        <div class="col-lg-4">
+            <form class="mb-5" method="post" action="">
+                {% csrf_token %}
+                <div class="input-group">
+                    <input type="text" class="form-control p-4" name="coupon" placeholder="{{coupons}}" required>
+                    <div class="input-group-append">
+                        <button type="submit" class="submit btn" style="background-color: #F1B709; color: black;">Apply Coupon</button>
+                    </div>
+                </div>
+            </form>
+            {% if coupon_status == 'already_used' %}
+            <div class="alert alert-warning mt-3" role="alert">
+                Coupon has already been used by the user.
+            </div>
+        {% endif %}
+            
+            <div class="card border-secondary mb-5">
+                <div class="card-header bg-secondary border-0">
+                    <h4 class="font-weight-semi-bold m-0">Cart Summary</h4>
+                </div>
+               
+                <div class="card-body">
+                    <div class="d-flex justify-content-between mb-3 pt-1">
+                        <h6 class="font-weight-medium">Subtotal</h6>
+                        <h6 class="font-weight-medium">RS : {{subtotal}}</h6>
+                    </div>
+                {% for product in products %}
+                    {% if has_category_offer %}
+                    <div class="d-flex justify-content-between">
+                        <h6 class="font-weight-medium">Discount OFFER: {{ product.product.products.category.categoryoffer}} %</h6>
+                    </div>
+                {% endif %}
+                {% endfor %}
+
+                
+                    
+
+
+
+                    
+                    <div class="d-flex justify-content-between">
+                        <!-- <h6 class="font-weight-medium">{{coupons.coupon_code}}</h6> -->
+                        <h6 class="font-weight-medium">Coupon Discount : {{discount}}</h6>
+                    </div>
+                </div>
+                <div class="card-footer border-secondary bg-transparent">
+                    <div class="d-flex justify-content-between mt-2">
+                        <h5 class="font-weight-bold">Total</h5>
+                        <h5 class="font-weight-bold">RS : {{total_price}}</h5>
+                    </div>
+                    <a href="{% url 'adress_selection' %}" class="btn btn-block my-3 py-3" style="background-color: #F1B709; color: black;">Proceed To Checkout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function decreaseQuantity(inputId) {
+        var quantityInput = document.getElementById(inputId);
+        var currentQuantity = parseInt(quantityInput.value);
+
+        if (currentQuantity > 1) {
+            quantityInput.value = currentQuantity - 1;
+        }
+    }
+
+    function increaseQuantity(inputId) {
+        var quantityInput = document.getElementById(inputId);
+        var currentQuantity = parseInt(quantityInput.value);
+
+        quantityInput.value = currentQuantity + 1;
+    }
+
+    $(document).ready(function () {
+        $('[id^="quantityForm"]').submit(function (e) {
+            e.preventDefault();
+            var form = $(this);
+            var url = form.attr('action');
+            var quantity = form.find('[id^="quantityInput"]').val();
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: {
+                    quantity: quantity,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                success: function (response) {
+                    // Handle success response, if needed
+                    
+                },
+                error: function (xhr) {
+                    // Handle error response, if needed
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

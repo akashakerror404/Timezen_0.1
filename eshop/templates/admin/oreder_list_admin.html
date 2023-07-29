@@ -1,0 +1,132 @@
+{%extends 'baseadmin.html'%}
+{% load static %}
+{% block title %}
+Order List
+{% endblock %}
+{% block link %}
+<style>
+.blue-table {
+  background-color: #e9f2fb; /* Set background color to blue */
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.blue-table th,
+.blue-table td {
+  padding: 8px;
+  text-align: left;
+}
+
+.blue-table th {
+  background-color: #3572b0;
+  color: #fff;
+}
+
+</style>
+{% endblock %}
+
+{% block content %}
+<br>
+<br>
+<br>
+<div class="container">
+  <h1>Order List</h1>
+
+  <form method="GET">
+    <div class="input-group mb-3">
+      <input type="text" class="form-control" name="search" placeholder="Search by Order ID" value="{{ request.GET.search }}">
+      <div class="input-group-append">
+        <button class="btn btn-primary" type="submit">Search</button>
+      </div>
+    </div>
+  </form>
+
+  <table class="blue-table">
+    <thead>
+      <tr>
+        <th>Order ID</th>
+        <th>Username</th>
+        <th>Order Date</th>
+        <th>Total Price</th>
+        <th>Order Status</th>
+        <th>Payment Method</th>
+        <th>Delivery Date</th>
+        <th>Ordered Product</th>
+        <th>View Details</th> <!-- New column for the view details button -->
+      </tr>
+    </thead>
+    <tbody>
+      {% for order in order_list %}
+        <tr>
+          <td>{{ order.id }}</td>
+          <td>{{ order.user.username }}</td>
+          <td>{{ order.order_date }}</td>
+          <td>{{ order.total_price }}</td>
+          <td>{{ order.payment_status }}</td>
+          <td>{{ order.payment_method }}</td>
+          <td>{{ order.delivery_date }}</td>
+          <td>
+            <ul>
+              {% for orderlist in order.orderlist_set.all %}
+                <li>{{ orderlist.product.products.name }}</li>
+              {% endfor %}
+            </ul>
+          </td>
+          <td>
+            <a href="{% url 'order_details_admin' order.id %}" class="btn btn-primary">View Details</a>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  
+                        
+
+</div>
+
+  <!-- Paginator -->
+  <div class="d-flex justify-content-center mt-4">
+    <ul class="pagination">
+      {% if order_list.has_previous %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ order_list.previous_page_number }}&search={{ request.GET.search }}" aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+            <span class="sr-only">Previous</span>
+          </a>
+        </li>
+      {% else %}
+        <li class="page-item disabled">
+          <a class="page-link" href="#" aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+            <span class="sr-only">Previous</span>
+          </a>
+        </li>
+      {% endif %}
+
+      {% for num in order_list.paginator.page_range %}
+        {% if num == order_list.number %}
+          <li class="page-item active"><a class="page-link" href="?page={{ num }}&search={{ request.GET.search }}">{{ num }}</a></li>
+        {% else %}
+          <li class="page-item"><a class="page-link" href="?page={{ num }}&search={{ request.GET.search }}">{{ num }}</a></li>
+        {% endif %}
+      {% endfor %}
+
+      {% if order_list.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ order_list.next_page_number }}&search={{ request.GET.search }}" aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+            <span class="sr-only">Next</span>
+          </a>
+        </li>
+      {% else %}
+        <li class="page-item disabled">
+          <a class="page-link" href="#" aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+            <span class="sr-only">Next</span>
+          </a>
+        </li>
+      {% endif %}
+    </ul>
+  </div>
+</div>
+{% endblock %}

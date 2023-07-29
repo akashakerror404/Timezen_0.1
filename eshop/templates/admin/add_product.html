@@ -1,0 +1,124 @@
+{% extends 'baseadmin.html' %}
+{% load static %}
+{% block title %}
+add_product
+{% endblock %}
+{% block link %}
+<style>
+    /* style.css */
+
+    .button {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #007bff; /* Change this to the desired background color */
+        color: #ffffff; /* Change this to the desired text color */
+        text-decoration: none;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    .button:hover {
+        background-color: #0056b3; /* Change this to the desired hover background color */
+    }
+
+</style>
+{% endblock %}
+
+{% block content %}
+<br>
+<br>
+<br>
+<br>
+<div class="container">
+    <h1>Add Product</h1>
+    <form action="/add_product/" enctype="multipart/form-data" method="post">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label for="exampleFormControlInput1">Product Name</label>
+            <input type="text" class="form-control" name="name" id="exampleFormControlInput1" placeholder="Product name" value="{{ request.POST.name }}" required/>
+        </div>
+        <br>
+        <div class="form-group">
+            <label for="exampleFormControlTextarea1">Description</label>
+            <textarea class="form-control" name="description" id="exampleFormControlTextarea1" placeholder="Enter product description" rows="10" value="{{ request.POST.product_description }}"></textarea>
+        </div>
+        <br>
+        
+        <div class="form-group">
+            <label for="exampleFormControlInput3">Price</label>
+            <input type="number" class="form-control text-black" name="price" id="id_price" placeholder="Enter price" step="0.01" min="0">
+        </div>
+        <br>
+        <div class="form-group">
+            <label for="exampleFormControlInput3">Discount Price</label>
+            <input type="number" class="form-control text-black" name="discountprice" id="id_discountprice" placeholder="Enter discount price" step="0.01" min="0">
+        </div>
+        <br>
+
+        <div class="form-group">
+            <label for="exampleFormControlInput3">Stock</label>
+            <input type="number" class="form-control text-black" name="stock" id="exampleFormControlInput3" placeholder="Enter stock" min="0">
+        </div>
+        <br>
+          
+        <div class="col-sm-9">
+            <select class="form-control text-black" name="category" id="id_category">
+              <option value="">Select a category</option>
+              {% for category in categories %}
+                <option value="{{ category.id }}">{{ category.name }}</option>
+              {% endfor %}
+            </select>
+        </div>
+        <br>
+
+        <div class="col-sm-9">
+            <select class="form-control text-black" name="colour" id="id_colour">
+              <option value="">Select Colour Variant</option>
+              {% for colour in colours %}
+                <option value="{{ colour.colour }}">{{ colour.colour }}</option>
+              {% endfor %}
+            </select>
+        </div>
+        <br>
+        <br>
+        <div class="container mt-3">
+            <!-- Create the Bootstrap button with a link -->
+            <a href="{% url 'add_color' %}" class="btn btn-primary">Add Colour</a>
+        </div>
+
+        <br>
+        <div class="mb-3">
+            <label for="exampleInputImage" class="form-label">Display Image</label>
+            <input type="file" class="form-control" name="display_image" id="exampleInputImage">
+        </div>
+        <br>
+        <div class="mb-3">
+            <label for="exampleInputImage" class="form-label">Add Images</label>
+            <input type="file" class="form-control" name="images" id="exampleInputImage" multiple>
+        </div>
+          
+        <div class="pt-1  mb-4">
+            <button class="btn btn-info btn-lg btn-block" type="submit">Add Product and select Images</button>
+        </div>
+       
+    </form>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("form").submit(function (event) {
+            var price = parseFloat($("#id_price").val());
+            var discountprice = parseFloat($("#id_discountprice").val());
+
+            if (!isNaN(price) && !isNaN(discountprice) && price <= discountprice) {
+                alert("Price must be greater than the discount price!");
+                event.preventDefault(); // Prevent form submission
+            }
+        });
+    });
+</script>
+{% endblock %}

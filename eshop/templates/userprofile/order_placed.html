@@ -1,0 +1,82 @@
+<!-- order_placed.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    Order Placed
+{% endblock %}
+{% block link %}
+<style>
+    .order-placed-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin-top: 10px; /* Add margin to the top */
+    }
+
+    .order-placed-title {
+        font-size: 24px;
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    .order-details {
+        text-align: center;
+        margin-top: 10px; /* Add margin to the top */
+    }
+
+    .order-id,
+    .user,
+    .total-price {
+        font-size: 18px;
+        margin-bottom: 10px;
+    }
+
+    .product-names {
+        font-size: 16px;
+        margin-bottom: 10px;
+    }
+
+    .delivery-date {
+        font-size: 16px;
+        margin-bottom: 10px;
+    }
+
+    .continue-shopping-button {
+        margin-top: 20px;
+    }
+
+    .order-image {
+        margin-bottom: 20px;
+        max-width: 200px;
+    }
+</style>
+{% endblock %}
+
+{% block user %}
+
+
+<a href="{% url 'userprofile'  %}" class="btn border">
+    <i class="fa fa-user" aria-hidden="true" style="color: #F1B709;"></i>
+    <span class="badge">{{user}}</span>
+</a>
+    
+{% endblock %}
+
+{% block content %}
+    <div class="order-placed-container">
+        <img class="order-image" src="{% static 'img/delivary.png'%}" alt="Order Placed">
+        <h1 class="order-placed-title">Order Placed</h1>
+        <div class="order-details">
+            <p class="order-id">Order ID: {{ order.id }}</p>
+            <p class="user">User: {{ order.user.username }}</p>
+            <p class="total-price">Total Price: ${{ order.total_price }}</p>
+            
+            <p class="delivery-date">Delivery Date: {{ order.delivery_date }}</p>
+            <p>Thank you for shopping with us!</p>
+        </div>
+        <a href="{% url 'shop' %}" class="btn btn-primary continue-shopping-button">Continue Shopping</a>
+    </div>
+{% endblock %}

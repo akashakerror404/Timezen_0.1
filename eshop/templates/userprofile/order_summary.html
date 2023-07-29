@@ -1,0 +1,331 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+home
+{% endblock %}
+{% block link %}
+<style>
+    /* Custom styles for the "Place Order" button */
+.amado-btn {
+    background-color: #F1B709;
+    color: #fff;
+    border: none;
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+.amado-btn:hover {
+    background-color: #E2A109;
+}
+
+.w-100 {
+    width: 100%;
+}
+.custom-label-prepaid {
+    color: #28a745; /* Set your desired color */
+    font-weight: bold; /* Add any other desired styles */
+}
+.custom-label-cod {
+    color: #003fec; /* Set your desired color */
+    font-weight: bold; /* Add any other desired styles */
+}
+
+
+</style>
+
+{% endblock %}
+
+{% block user %}
+
+
+<a href="{% url 'userprofile'  %}" class="btn border">
+    <i class="fa fa-user" aria-hidden="true" style="color: #F1B709;"></i>
+    <span class="badge">{{user}}</span>
+</a>
+    
+{% endblock %}
+
+{% block content %}
+<div class="order-page-content">
+    <div class="container-fluid pt-7">
+        <div class="row">
+            <div class="col-lg-8">
+                <!-- Shipping Address -->
+                <h4>Shipping Address</h4>
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <th>First Name:</th>
+                            <td>{{ address.first_name }}</td>
+                        </tr>
+                        <tr>
+                            <th>Last Name:</th>
+                            <td>{{ address.last_name }}</td>
+                        </tr>
+                        <tr>
+                            <th>Country:</th>
+                            <td>{{ address.country }}</td>
+                        </tr>
+                        <tr>
+                            <th>Address:</th>
+                            <td>{{ address.address }}</td>
+                        </tr>
+                        <tr>
+                            <th>City:</th>
+                            <td>{{ address.city }}</td>
+                        </tr>
+                        <tr>
+                            <th>Pincode:</th>
+                            <td>{{ address.pincode }}</td>
+                        </tr>
+                        <tr>
+                            <th>Phone:</th>
+                            <td>{{ address.phone }}</td>
+                        </tr>
+                        <tr>
+                            <th>Email:</th>
+                            <td>{{ address.email }}</td>
+                        </tr>
+                        <tr>
+                            <th>State:</th>
+                            <td>{{ address.state }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-lg-4">
+                <!-- Payment Options -->
+                
+                <!-- Cart Total -->
+                <h4>Cart Total</h4>
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <th>Subtotal:</th>
+                            <td>RS : {{subtotal_price}}</td>
+                        </tr>
+                        <tr>
+                            <th>Shipping:</th>
+                            <td>Free</td>
+                        </tr>
+                        <tr>
+                            <th>Total:</th>
+                            <td>RS : {{total_price}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <br>
+                
+                
+                <div class="col-12 col-lg-12 bg-secondary">
+                    <div class="cart-summary justify-content-center">
+                        <br>
+                        <h4 class="text-center">PAYMENT OPTION</h4>
+                        <br>
+                        <br>
+                
+                        <div class="payment-options row">
+                            <div class="col-sm-6">
+                                <div class="custom-control custom-radio mr-sm-2">
+                                    <input type="radio" class="custom-control-input payment-radio" id="cod" name="paymentMethod" value="cod">
+                                    <label class="custom-control-label custom-label-cod" for="cod">Cash on Delivery</label>
+                                </div>
+                            </div>
+                            {% if total_price <= wallet_total %}
+    <div class="col-sm-6">
+        <div class="custom-control custom-radio mr-sm-2">
+            <input type="radio" class="custom-control-input payment-radio" id="wallet" name="paymentMethod" value="WALLET">
+            <label class="custom-control-label custom-label-cod" for="wallet">Wallet Pay</label>
+        </div>
+    </div>
+{% endif %}
+
+                
+                            <div class="col-sm-6">
+                                <div class="custom-control custom-radio mr-sm-2">
+                                    <input type="radio" class="custom-control-input payment-radio" id="paypal" name="paymentMethod" value="PREPAID">
+                                    <label class="custom-control-label custom-label-prepaid" for="paypal">PREPAID</label>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <br>
+                
+                        <div class="cart-btn mt-100">
+                            <div id="selected-payment-method"></div>
+                            <button onclick="updatePaymentMethod()" type="button" class="btn amado-btn w-100" id="proceed-payment-btn">Place order</button>
+                        </div>
+                    </div>
+                </div>
+                
+                
+                
+                
+                
+                
+                
+             
+                
+                
+
+
+
+            </div>
+        </div>
+
+      
+        
+    </div>
+</div>
+
+<style>
+    .order-page-content {
+        background-color: #f5f5f5;
+        padding: 20px;
+    }
+
+    .order-page-content .table {
+        background-color: #ffffff;
+        border-radius: 5px;
+        padding: 20px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .order-page-content .btn-group-vertical {
+        background-color: #ffffff;
+        border-radius: 5px;
+        padding: 20px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .order-page-content .btn-group-vertical button {
+        margin-bottom: 10px;
+    }
+
+    .order-page-content .col-lg-8 {
+        margin-bottom: 20px;
+    }
+
+    .order-page-content .col-lg-4 {
+        margin-bottom: 20px;
+    }
+</style>
+{% block last %}
+<script>
+
+ function updatePaymentMethod(){
+    var paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+    if (paymentMethod == "PREPAID"){
+        var total_price = "{{total_price}}"
+        ;
+        redirectToRazorpay(paymentMethod, total_price);
+    }else if(paymentMethod == 'WALLET'){
+
+        alert('wallet pay');
+        window.location.href = "{% url 'order_wallet' address.id %}"
+    }
+    else {
+        sendPaymentMethodToServer(paymentMethod)
+    }
+ }
+
+ function sendPaymentMethodToServer(paymentMethod){
+    $.ajax({
+        url:"/order_placed/{{address.id}}",
+        method:"POST",
+        headers:{"X-CSRFToken" : "{{csrf_token}}"},
+        data :{paymentMethod : paymentMethod},
+        success : function(response){
+            window.location.href = "/order_confirmation/" + response.order_id;
+        },
+        error : function(xhr,status,error){
+            console.log("Error:",error);
+        }
+    });
+ }
+function redirectToRazorpay(paymentMethod,total_price){
+
+    $.ajax({
+        url: "/initiate_payment/",
+        method:"POST",
+        headers : {"x-CSRFToken": "{{csrf_token}}" },
+        data : {paymentMethod:paymentMethod,total_price:total_price },
+        success :function(response){
+
+    var option={
+        "key":"rzp_test_MZaMhRtV2louDb",
+        "amount" :  response.amount,
+        "currency": "INR",
+        "name": "TIME-ZEN",
+        "description":"Test Transaction",
+        "image": "https://example.com/your_logo",
+        "order_id": response.razorpay_order_id, 
+        "handler":function(response){
+            var payment_id = response.razorpay_payment_id;
+
+            alert(response.razorpay_payment_id);
+   
+            $.ajax({
+                url:"/order_placed_razopay/{{address.id}}",
+                method: "POST",
+                headers : { "X-CSRFToken":"{{csrf_token}}"},
+                data:{
+                    payment_id :payment_id ,
+                },
+                success:function(response){
+                    window.location.href = "/order_confirmation/" + response.order_id;
+
+                },
+                error:function(xhr,status,error){
+                    console.log("Error",error);
+                }
+            });
+        },
+        "prefill":{
+            "name": "",
+            "email": "",
+            "contact": ""
+        },
+        "notes":{
+            "address": "Razorpay corporate office"
+        },"theme":{
+            "color" : "#3399cc"
+        }
+
+
+        
+
+    };
+    var rzp1 = new Razorpay(option);
+    rzp1.on('payment.failed',function(response){
+        alert(response.error.reason);
+        alert(response.error.metadata.payment_id);
+
+}); 
+    rzp1.open();
+
+},
+
+});
+
+
+}
+
+
+
+
+
+
+
+</script>
+
+
+
+{% endblock %}
+
+
+{% endblock %}

@@ -1,0 +1,81 @@
+{%extends 'baseadmin.html'%}
+{% load static %}
+{% block title %}
+category
+{% endblock %}
+{% block content %}
+<div class="container-fluid">
+  <div class="container-fluid">
+      <div class="card">
+          <div class="card-body">
+              <h5 class="card-title fw-semibold mb-4">CATEGOREY</h5>
+              <table class="table">
+                  <thead>
+                      <tr>
+                          <th scope="col">ID</th>
+                          <th scope="col">Image</th>
+                          <th scope="col">Name</th>
+                          <th scope="col">categoryoffer</th>
+                          <th scope="col">Actions</th> <!-- Add a new column for edit actions -->
+                      </tr>
+                  </thead>
+                  <tbody>
+                      {% for categ in categ_list %}
+                      <tr>
+                          <td>{{ categ.id }}</td>
+                          <td>
+                              <img src="{{ categ.img.url }}" alt="Category Image" width="50">
+                          </td>
+                          <td>{{ categ.name }}</td>
+                          <td>{{ categ.categoryoffer }}</td>
+                          <td>
+                              <!-- Add an edit link for each category -->
+                              <a href="{% url 'edit_category' categ.id %}" class="btn btn-primary btn-sm">Edit</a>
+                          </td>
+                      </tr>
+                      {% endfor %}
+                  </tbody>
+              </table>
+          </div>
+      </div>
+  </div>
+</div>
+
+  <div class="container-fluid">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title fw-semibold mb-4">ADD CATEGORY</h5>
+                <div class="card">
+                    <div class="card-body">
+                        <form enctype="multipart/form-data" method="POST" action="/add_categ">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label for="exampleInputEmail1" class="form-label">Category name</label>
+                                <input type="text" class="form-control" name="category_name" id="exampleInputEmail1" aria-describedby="emailHelp">
+                            </div>
+                            <div class="mb-3">
+                              <label for="exampleInputCategoryOffer" class="form-label">Category Offer</label>
+                              <input type="text" class="form-control" name="categoryoffer" id="exampleInputCategoryOffer">
+                          </div>
+                          
+                            <!-- <div>
+                                <input type="text" name="slug" id="lastname" class="formbold-form-input">
+                                <label for="lastname" class="formbold-form-label">Slug</label>
+                            </div> -->
+                            <br>
+                            <div class="mb-3">
+                                <label for="exampleInputImage" class="form-label">Image</label>
+                                <input type="file" class="form-control" name="categ_image" id="exampleInputImage">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </form>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}  

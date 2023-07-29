@@ -1,0 +1,160 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    Order Details
+{% endblock %}
+
+{% block link %}
+<style>
+    .product-image {
+        width: 100px;
+        height: auto;
+    }
+
+    .order-details-header {
+        background-color: #0875e354;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    .order-details-header h1 {
+        margin-top: 0;
+        color: #fff;
+    }
+    .cancel-order-btn:hover {
+      background-color: #ff0000;
+    }
+    .cancel-order-btn {
+      background-color: #dc4040a6;
+      color: #ffffff;
+      padding: 2px 3px; /* Adjust padding for smaller button */
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 19px; /* Adjust font size for smaller button */
+    }
+    
+
+    .order-details-header p {
+        margin: 5px 0;
+        color: #fff;
+    }
+
+    .table-bordered th,
+    .table-bordered td {
+        border-color: #ccc;
+    }
+
+    .table-bordered thead th {
+        background-color: #0875e3;
+        color: #fff;
+    }
+</style>
+{% endblock %}
+{% block user %}
+
+<a href="{% url 'userprofile'  %}" class="btn border">
+    <i class="fa fa-user" aria-hidden="true" style="color: #F1B709;"></i>
+    <span class="badge">{{user}}</span>
+</a>
+    
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- <div class="container"> -->
+        <table class="table table-bordered">
+            <thead class="bg-primary text-white">
+                <tr>
+                    <th colspan="2">Order Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Order ID:</td>
+                    <td>{{ order.id }}</td>
+                </tr>
+                <tr>
+                    <td>Payment Method:</td>
+                    <td>{{ order.payment_method }}</td>
+                </tr>
+                <tr>
+                    <td>Total Price:</td>
+                    <td>{{ order.total_price }}</td>
+                </tr>
+                <tr>
+                    <td>Delivery Date:</td>
+                    <td>{{ order.delivery_date }}</td>
+                </tr>
+            </tbody>
+        </table>
+    <!-- </div> -->
+    
+
+    <h2>Product</h2>
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead class="bg-primary text-white">
+                <tr>
+                    <th>Product Image</th>
+                    <th>Product Name</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for orderlist in order.orderlist_set.all %}
+                <tr>
+                    <td><img src="{{ orderlist.product.displayimage.url }}" alt="Product Image" class="product-image"></td>
+                    <td>{{ orderlist.product.products.name }}</td>
+                    <td>{{ orderlist.quantity }}</td>
+                    <td>{{ orderlist.price }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <h2>Shipping Address</h2>
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead class="bg-primary text-white">
+                <tr>
+                    <th>Address</th>
+                    <th>First Name</th>
+                    <th>Phone</th>
+                    <th>Email</th>
+                    <th>Country</th>
+                    <th>State</th>
+                    <th>City</th>
+                    <th>Pincode</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ order.address.address }}</td>
+                    <td>{{ order.address.first_name }}</td>
+                    <td>{{ order.address.phone }}</td>
+                    <td>{{ order.address.email }}</td>
+                    <td>{{ order.address.country }}</td>
+                    <td>{{ order.address.state }}</td>
+                    <td>{{ order.address.city }}</td>
+                    <td>{{ order.address.pincode }}</td>
+                </tr>
+            </tbody>
+        </table>
+        <form action="{% url 'delete_order' order.id %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="cancel-order-btn">Cancel Order</button>
+          </form>
+
+          <form action="{% url 'download_order_pdf' order.id %}"  method="post">
+            {% csrf_token %}
+            <button type="submit" class="cancel-order-btn">doenload Order</button>
+          </form>
+
+
+    </div>
+</div>
+{% endblock %}

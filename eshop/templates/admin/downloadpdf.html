@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice - ESHOP</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .blue-table {
+          background-color: #e9f2fb;
+          border-collapse: collapse;
+          width: 100%;
+        }
+        .invoice-container {
+            justify-content: center;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            padding-left: 20px;
+
+        }
+      
+        .blue-table th,
+        .blue-table td {
+          padding: 8px;
+          text-align: left;
+        }
+      
+        .blue-table th {
+          background-color: #3572b0;
+          color: #fff;
+        }
+      
+        .product-image {
+          width: 50px;
+          height: 50px;
+          object-fit: cover;
+        }
+      
+        .large-button {
+          padding: 12px 40px;
+          font-size: 16px;
+          background-color: #3572b0;
+          color: #fff;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+        }
+        
+        .long-button {
+          width: 100%;
+        }
+        
+        .address-container {
+          background-color: #f8f8f8;
+          padding: 12px;
+          border-radius: 4px;
+          margin-bottom: 20px;
+        }
+        
+        .address-label {
+          font-weight: bold;
+        }
+      </style>
+</head>
+<body>
+    <div class="container invoice-container">
+        <div class="container-fluid jus" >
+            <div class="container invoice-container">
+                <h1 class="invoice-heading">Invoice -TIME ZEN</h1>
+            </div>
+
+
+            <h1>Order Details</h1>
+            
+            <table class="blue-table">
+              <tr>
+                <th>Order ID</th>
+                <th>Username</th>
+                <th>Order Date</th>
+                <th>Total Price</th>
+                <th>Order Status</th>
+                <th>Payment Method</th>
+                <th>Delivery Date</th>
+              </tr>
+              <tr>
+                <td>{{ order.id }}</td>
+                <td>{{ order.user.username }}</td>
+                <td>{{ order.order_date }}</td>
+                <td>{{ order.total_price }}</td>
+                <td>{{ order.payment_status }}</td>
+                <td>{{ order.payment_method }}</td>
+                <td>{{ order.delivery_date }}</td>
+              </tr>
+            </table>
+            
+            <br>
+            <br>
+            
+            <h2>Ordered Products</h2>
+            
+            <table class="blue-table">
+              <tr>
+                <th>Product Colur</th>
+                <th>Product Name</th>
+                <th>Quantity</th>
+                <th>Price</th>
+              </tr>
+              {% for orderlist in order.orderlist_set.all %}
+              <tr>
+                <td>{{ orderlist.product.colour }}</td>
+                <td>{{ orderlist.product.products.name }}</td>
+                <td>{{ orderlist.quantity }}</td>
+                <td>{{ orderlist.price }}</td>
+              </tr>
+              {% endfor %}
+            </table>
+            
+            <br>
+            <br>
+            <h3>Shipping Address</h3>
+            <div class="address-container">
+              <p>
+                <span class="address-label">Name:</span> {{ order.address.first_name }} {{ order.address.last_name }} <br>
+                <span class="address-label">Address:</span> {{ order.address.address }} <br>
+                <span class="address-label">City:</span> {{ order.address.city }} <br>
+                <span class="address-label">State:</span> {{ order.address.state }} <br>
+                <span class="address-label">Country:</span> {{ order.address.country }} <br>
+                <span class="address-label">Pincode:</span> {{ order.address.pincode }} <br>
+                <span class="address-label">Phone:</span> {{ order.address.phone }} <br>
+                <span class="address-label">Email:</span> {{ order.address.email }}
+              </p>
+            </div>
+            
+            
+            
+            <!-- Large Button for Confirming Order and Shipping -->
+          
+            
+
+      <br>
+
+        <!-- <div class="text-center mb-10">
+            <a href="{% url 'download_order_pdf' order.id %}" class="btn btn-primary btn-lg btn-block">Details of Order  Download PDF</a>
+          </div> -->
+          
+    </div>
+
+    <!-- Bootstrap JS -->
+</body>
+</html>

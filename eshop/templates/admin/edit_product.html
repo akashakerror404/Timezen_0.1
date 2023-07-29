@@ -1,0 +1,79 @@
+{%extends 'baseadmin.html'%}
+
+{% block title %}
+    Edit Product
+{% endblock %}
+
+{% block link %}
+    <style>
+        .container {
+            margin-top: 100px;
+        }
+
+        h1 {
+            font-size: 32px;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-check {
+            margin-bottom: 20px;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+<br>
+<br>
+<br>
+<br>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <h1>Edit Product</h1>
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="name">Product Name:</label>
+                        <input type="text" class="form-control" id="name" name="name" value="{{ product.name }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="desc">Product Description:</label>
+                        <textarea class="form-control" id="desc" name="desc" required>{{ product.desc }}</textarea>
+                    </div>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="available" name="available" {% if product.available %}checked{% endif %}>
+                        <label class="form-check-label" for="available">Available</label>
+                    </div>
+                    <div class="form-group">
+                        <label for="price">Price:</label>
+                        <input type="number" class="form-control" id="price" name="price" value="{{ product.price }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="price">Discount Price:</label>
+                        <input type="number" class="form-control" id="price" name="discountprice" value="{{ product.discountprice }}" >
+                    </div>
+                    <div class="form-group">
+                        <label for="category">Category:</label>
+                        <select class="form-control" id="category" name="category" required>
+                            {% for category in categories %}
+                                <option value="{{ category.id }}" {% if category.id == product.category_id %}selected{% endif %}>{{ category.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

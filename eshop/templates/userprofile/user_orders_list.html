@@ -1,0 +1,247 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    User Profile
+{% endblock %}
+
+{% block link %}
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<style>
+    table {
+        border-collapse: collapse;
+        width: 65%;
+        border-spacing: 2px; /* Add additional spacing between columns */
+    }
+
+    th,
+    td {
+        padding: 7px;
+    }
+
+    th {
+        text-align: left;
+    }
+
+    .cancel-order-btn2 {
+        background-color: #032bf26b;
+        color: #ffffff;
+        padding: 2px 3px; /* Adjust padding for smaller button */
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px; /* Adjust font size for smaller button */
+    }
+
+    .cancel-order-btn2:hover {
+        background-color: #2f00ff;
+    }
+
+    .quantity-column {
+        padding-right: 5px; /* Add right padding to the quantity column */
+    }
+
+    .cancel-order-button-cell {
+        padding-left: 5px; /* Add left padding to the cancel order button cell */
+    }
+
+    /* Your other CSS styles */
+
+    /* Media query to hide the mobile toggle button for larger screens */
+    @media (min-width: 769px) {
+        .mobile-toggle-bar {
+            display: none;
+        }
+        .breadcrumb {
+            display: block; /* Show breadcrumb for larger screens */
+        }
+    }
+
+    /* Add this in your CSS or style tag */
+    @media (max-width: 768px) {
+        .breadcrumb {
+            display: none; /* Hide breadcrumb for mobile screens */
+        }
+        .breadcrumb.show-mobile-menu {
+            display: block; /* Show breadcrumb when mobile menu is toggled */
+        }
+        .breadcrumb.show-mobile-menu .item {
+            display: block; /* Display each breadcrumb item as a block */
+            margin-bottom: 5px; /* Add spacing between breadcrumb items */
+        }
+    }
+</style>
+{% endblock %}
+
+{% block user %}
+    <a href="" class="btn border">
+        <i class="fa fa-user" aria-hidden="true" style="color: #F1B709;"></i>
+        <span class="badge">{{ user }}</span>
+    </a>
+{% endblock %}
+
+{% block content %}
+<section style="background-color: #eee; ">
+    <div class="container py-5">
+      <nav aria-label="breadcrumb" class="bg-light rounded-3 p-3 mb-4">
+        <div class="mobile-toggle-bar">
+            <button id="mobileToggleBtn" class="btn btn-primary">
+                <i class="fa fa-bars"></i>
+            </button>
+        </div>
+        <ol class="breadcrumb mb-0">
+            <!-- Your breadcrumb items -->
+            <li class="item">
+                <a href="{% url 'userprofile'  %}">
+                    <button class="btn btn-primary">User profile</button>
+                </a>
+            </li>
+            <li class="item">
+                <a href="{% url 'user_orders_list' %}" >
+                    <button class="btn btn-primary">Orders</button>
+                </a>
+            </li>
+            <!-- <li class="item">
+                <a href="/wish_list/">
+                    <button class="btn btn-primary">Wishlist</button>
+                </a>
+            </li> -->
+            <li class="item">
+                <a href="{% url 'wallet'  %}">
+                    <button class="btn btn-primary">Wallet</button>
+                </a>
+            </li>
+            <!-- <li class="breadcrumb-item">
+                <button class="btn btn-primary">Coupons</button>
+            </li> -->
+            <li class="item">
+                <a href="{% url 'help'  %}">
+                    <button class="btn btn-primary">Help Center</button>
+                </a>
+            </li>
+        </ol>
+    </nav>
+    
+        
+          
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="card mb-4">
+                    <div class="card-body text-center">
+                        <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar"
+                            class="rounded-circle img-fluid" style="width: 150px;">
+                        <h5 class="my-3">{{ username }}</h5>
+                        <p class="text-muted mb-4">{{email}}</p>
+                        <div class="d-flex justify-content-center mb-2">
+                            <a href="{% url 'logout' %}" class="btn btn-primary">Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Payment method</th>
+                        <th class="quantity-column">Price</th>
+                        <!-- <th class="quantity-column">Delivery</th> -->
+                        <th class="cancel-order-button-cell">View details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                    <tr>
+                        <td>{{ order.id }}</td>
+                        <td>{{ order.payment_method }}</td>
+                        <td>{{ order.total_price }}</td>
+                        <!-- <td>{{ order.delivery_date }}</td> -->
+                        <td class="cancel-order-button-cell ">
+                            <form action="{% url 'view_order_details' order.id %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" class="cancel-order-btn2">View details</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            
+            <!-- Paginator -->
+            <div class="row ">
+                <div class="col justify-content-end">
+                    <ul class="pagination mt-4 justify-content-end">
+                        {% if orders.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ orders.previous_page_number }}" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                    <span class="sr-only">Previous</span>
+                                </a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                    <span class="sr-only">Previous</span>
+                                </a>
+                            </li>
+                        {% endif %}
+
+                        {% for num in orders.paginator.page_range %}
+                            {% if num == orders.number %}
+                                <li class="page-item active"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                            {% else %}
+                                <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if orders.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ orders.next_page_number }}" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                    <span class="sr-only">Next</span>
+                                </a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                    <span class="sr-only">Next</span>
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+<style>
+    /* Add this in your CSS or style tag */
+    @media (max-width: 768px) {
+        .breadcrumb.show-mobile-menu {
+            display: block;
+        }
+        .mobile-toggle-bar {
+            text-align: right;
+        }
+        #mobileToggleBtn {
+            display: block;
+        }
+        .breadcrumb {
+            display: none;
+        }
+    }
+</style>
+<script>
+    // jQuery document ready function
+    $(document).ready(function() {
+        // Toggle mobile menu visibility
+        $("#mobileToggleBtn").click(function() {
+            $(".breadcrumb").toggleClass("show-mobile-menu");
+        });
+    });
+</script>
+{% endblock %}

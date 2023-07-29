@@ -1,0 +1,14 @@
+from django.contrib import admin
+from .models import *
+
+
+# Register your models here.
+admin.site.register(Address)
+admin.site.register(Order)
+admin.site.register(Orderlist)
+admin.site.register(PersonalDetails)
+
+
+
+
+

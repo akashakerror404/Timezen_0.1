@@ -1,0 +1,98 @@
+{% extends 'baseadmin.html' %}
+{% load static %}
+{% block title %}
+add_product
+{% endblock %}
+{% block link %}
+<style>
+  /* style.css */
+
+/* Center the form and the color list */
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 50vh; /* Set the container height to fit the entire viewport */
+}
+
+/* Style the form */
+.color-form {
+  max-width: 300px;
+  margin-bottom: 20px;
+}
+
+.color-form .form-group label {
+  font-weight: bold;
+}
+
+/* Style the color list */
+.color-list {
+  list-style: none;
+  padding: 0;
+}
+
+.color-list li {
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+}
+
+.color-box {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+}
+.color-row {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.color-item {
+  display: flex;
+  align-items: center;
+  margin-right: 20px; /* Adjust as needed to create space between color items */
+}
+
+.color-box {
+  width: 30px; /* Set the desired width of the color box */
+  height: 30px; /* Set the desired height of the color box */
+  display: inline-block;
+  margin-right: 10px; /* Adjust as needed to create space between the box and color name */
+}
+
+
+</style>
+
+{% endblock %}
+
+{% block content %}
+<div class="container">
+
+  <div class="col-12">
+    <h1>Add Color</h1>
+    <form action="/add_color/" method="post" class="color-form">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="colorName">Color Name:</label>
+        <input type="text" id="colorName" name="new_color" required class="form-control">
+      </div>
+      <br>
+      <button type="submit" class="btn btn-success btn-block btn-long">Add Color</button>
+    </form>
+  </div>
+
+  <!-- Display the existing colors -->
+  <div class="col-12">
+    <h2>Existing Colors:</h2>
+    <div class="color-row">
+      {% for color in colours %}
+        <div class="color-item">
+          <span class="color-box" style="background-color: {{ color.colour }}"></span>
+          {{ color.colour }}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}

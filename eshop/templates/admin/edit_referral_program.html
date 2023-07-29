@@ -1,0 +1,35 @@
+{% extends 'baseadmin.html' %}
+
+{% block title %}Edit Referral Program{% endblock %}
+
+{% block content %}
+<br>
+<div class="container py-5">
+    <div class="card shadow">
+        <div class="card-body">
+            <h3>Edit Referral Program</h3>
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="description">Description:</label>
+                    <textarea class="form-control" name="description" id="description" rows="3" cols="30">{{ program.description }}</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="userwallet">User Wallet Amount:</label>
+                    <input type="number" class="form-control" name="userwallet" id="userwallet" value="{{ program.userwallet }}">
+                </div>
+
+                <div class="form-group">
+                    <label for="referrerdwallet">Referrer's Wallet Amount:</label>
+                    <input type="number" class="form-control" name="referrerdwallet" id="referrerdwallet" value="{{ program.referrerdwallet }}">
+                </div>
+                <br>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

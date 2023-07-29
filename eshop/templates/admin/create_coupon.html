@@ -1,0 +1,84 @@
+{%extends 'baseadmin.html'%}
+
+{% block title %}Create Coupon{% endblock %}
+
+{% block content %}
+<br>
+<div class="container py-5">
+    
+ 
+
+    {% for message in messages %}
+
+    <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
+        <strong>Message</strong>  {{message}}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    {% endfor %}
+
+
+    <h1 class="mb-4">Create Coupon</h1>
+    <div class="card shadow">
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="coupon_code">Coupon Code</label>
+                    <input type="text" class="form-control" id="coupon_code" name="coupon_code" placeholder="Enter coupon code" required>
+                </div>
+                <div class="form-group">
+                    <label for="discount_price">Discount Price</label>
+                    <input type="number" class="form-control" id="discount_price" name="discount_price" value="150" required>
+                </div>
+                <div class="form-group">
+                    <label for="minimum_amount">Minimum Amount</label>
+                    <input type="number" class="form-control" id="minimum_amount" name="minimum_amount" value="500"required>
+                </div>
+                <div class="form-group">
+                    <label for="expiry_date">Expiry Date</label>
+                    <input type="date" class="form-control" id="expiry_date" name="expiry_date"required>
+                </div>
+                <br>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary">Create Coupon</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <br>
+
+    <div class="card shadow">
+        <div class="card-body">
+            <h3>Existing Coupons</h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Coupon Code</th>
+                        <th>Discount Price</th>
+                        <th>Minimum Amount</th>
+                        <th>Expiry Date</th>
+                        <th>Expired</th>
+                        <!-- <th>Action</th> -->
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for coupon in coupons %}
+                    <tr>
+                        <td>{{ coupon.coupon_code }}</td>
+                        <td>{{ coupon.discount_price }}</td>
+                        <td>{{ coupon.minimum_amount }}</td>
+                        <td>{{ coupon.expiry_date }}</td>
+                        <td>{{ coupon.is_expired }}</td>
+                        
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+</div>
+{% endblock %}

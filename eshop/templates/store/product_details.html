@@ -1,0 +1,415 @@
+
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+shop
+{% endblock %}
+{% block link %}
+<style type="text/css">
+    body { background-color:#fafafa;}
+        img{display: block;}
+        .imgBox{width: 565px;height: 550px;border: 1px solid #2222226c;}
+    </style>
+    <style>
+   /* Add your existing styles here */
+
+.offer-badge {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.offer-circle {
+  background-color: #f2c94c; /* Background color of the circle */
+  width: 30px; /* Adjust the size of the circle */
+  height: 30px;
+  border-radius: 50%; /* Make it round */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10px; /* Add some space between the circle and the offer text */
+}
+
+.offer-icon {
+  font-size: 14px; /* Adjust the font size of the star icon */
+  color: #ff5733; /* Color of the star icon */
+}
+
+.offer-text {
+  font-size: 14px; /* Font size of the offer text */
+  font-weight: bold;
+}
+
+    </style>
+
+    
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script type="text/javascript" src="{% static 'js/jquery.imgzoom.js' %}"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+
+    <style>
+        .color-item:focus {
+    outline: none;
+        }
+    </style>
+    
+   
+{% endblock %}
+
+{% block user %}
+
+
+
+<a href="{% url 'userprofile'  %}" class="btn border">
+    <i class="fa fa-user" aria-hidden="true" style="color: #F1B709;"></i>
+    <span class="badge">{{user}}</span>
+</a>
+    
+{% endblock %}
+
+{% block content %}
+    
+
+<div class="container-fluid py-5">
+    <div class="row px-xl-5">
+        <div class="container-fluid py-5">
+            <div class="row px-xl-5">
+                <div class="col-lg-5 pb-5 ">
+                    <div id="product-carousel" class="carousel slide" data-ride="carousel">
+                        <div class="carousel-inner border">
+                            {% for pro in product.product_image_set.all %}
+                            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                                <div class="imgBox ">
+                                    <img class="w-100 h-100  " src="{{ pro.image.url }}" data-origin="{{ pro.image.url }}" alt="Image" >
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <a class="carousel-control-prev" href="#product-carousel" data-slide="prev">
+                            <i class="fa fa-2x fa-angle-left text-dark"></i>
+                        </a>
+                        <a class="carousel-control-next" href="#product-carousel" data-slide="next">
+                            <i class="fa fa-2x fa-angle-right text-dark"></i>
+                        </a>
+                    </div>
+                </div>
+        
+
+        <div class="col-lg-7 pb-5">
+            <h3 class="font-weight-semi-bold">{{product.products.name}}({{product.colour}})</h3>
+            <!-- {% if producttable.category.categoryoffer %}
+                <div class="offer-badge">
+                <div class="offer-circle">
+                    <i class="fas fa-star offer-icon"></i>
+                </div>
+                <h6 class="offer-text">FLAT {{ producttable.category.categoryoffer }} OFF</h6>
+                </div>
+
+            {% endif %} -->
+            
+            {% if producttable.category.categoryoffer %}
+    <span class="fa-stack fa-xs">
+        <i class="fa fa-certificate fa-stack-2x text-danger"></i> <!-- Set icon color to red using 'text-danger' class -->
+        <i class="fa fa-tag fa-stack-1x fa-inverse"></i>
+    </span>
+    FLAT {{ producttable.category.categoryoffer }}% OFF
+{% endif %}
+
+
+            
+
+           
+           
+            {% if product.products.discountprice %}
+            <h4 class="text-muted" style="text-decoration-line: line-through;">Rs: {{ product.products.price }}</h4>
+            <h3 class="font-weight-semi-bold mb-4">Rs: {{ product.products.discountprice }}</h3>
+        {% else %}
+            <h3 class="font-weight-semi-bold mb-4">Rs: {{ product.products.price }}</h3>
+        {% endif %}
+        
+
+            <!-- <p class="mb-4">{{product.products.desc}}.</p> -->
+            {% if product.stock <= 0 %}
+                <p class="mb-4">Sorry, out of stock</p>
+            {% elif product.stock <= 5 %}
+                <p class="mb-4">Available Stock: ({{ product.stock }}) - Book Fast!</p>
+            {% else %}
+                <p class="mb-4">Available Stock: ({{ product.stock }})</p>
+            {% endif %}
+
+        
+
+            
+            <!-- <div class="d-flex mb-4">
+                <p class="text-dark font-weight-medium mb-0 mr-3">Colors:</p>
+                <form>
+                    {% for color_variant in producttable.productvariant_set.all %}
+                    <div class="custom-control custom-radio custom-control-inline " >
+                        <input type="radio"  class="custom-control-input" id="color-{{ color_variant.id }}" name="color">
+                        <label class="custom-control-label"  for="color-{{ color_variant.id }}">
+                            <a href="{% url 'product_detail'  color_variant.slug  %}" > {{ color_variant.colour }} </a>
+                        </label>
+                    </div>
+                {% endfor %}
+            </form>
+            </div> -->
+            <div class="d-flex mb-4">
+                <p class="text-dark font-weight-medium mb-0 mr-3">Colors:</p>
+                <div class="color-row">
+                    {% for color_variant in producttable.productvariant_set.all %}
+                        <a href="{% url 'product_detail' color_variant.slug %}">
+                            <button class="color-item rounded-circle" style="background-color:{{ color_variant.colour }}; width: 20px; height: 20px; border: none;">
+                                <!-- The button content can be left empty if you only want to display visually -->
+                                <!-- If you want to add a label or text inside the button, you can do so here -->
+                            </button>
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            
+
+
+            
+            
+            
+            
+
+
+
+
+
+
+            <form method="post" action="{% url 'add_to_cart' product.slug %}" onsubmit="return validateQuantity()">
+                {% csrf_token %}
+                <div class="d-flex align-items-center mb-4 pt-2">
+                  <div class="input-group quantity mr-3" style="width: 130px;">
+                    <div class="input-group-btn">
+                      <button type="button" class="btn btn-primary btn-minus" onclick="decreaseQuantity()">
+                        <i class="fa fa-minus"></i>
+                      </button>
+                    </div>
+                    <input type="text" class="form-control bg-secondary text-center" id="quantityInput" name="quantity" value="1">
+                    <div class="input-group-btn">
+                      <button type="button" class="btn btn-primary btn-plus" onclick="increaseQuantity()">
+                        <i class="fa fa-plus"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <br>
+                  {% if product.stock <= 0 %}
+                  <button type="submit" class="btn btn-primary px-3 mr-2" style="background-color:#D19C97;">
+                    <i class="fa fa-shopping-cart mr-1"></i> Out of Stock
+                  </button>
+                  {% else %}
+                  <button type="submit" class="btn btn-primary px-3 mr-2" style="background-color:#D19C97;">
+                    <i class="fa fa-shopping-cart mr-1"></i> Add To Cart
+                  </button>
+                  
+                  <!-- <a href="{% url 'add_to_cart' product.slug %}" class="btn btn-primary px-3">
+                    <i class="fa fa-heart mr-1"></i> Add To Wish
+                  </a> -->
+                  {% endif %}
+                </div>
+              </form>
+              <form method="post" action="{% url 'add_to_wish' product.slug %}">
+                {% csrf_token %}
+                <div class="d-flex align-items-center mb-4 pt-2">
+                    <button type="submit" class="btn btn-primary px-3">
+                        <i class="fa fa-heart mr-1"></i> Add To Wish
+                    </button>
+                </div>
+            </form>
+              
+              <script>
+                function validateQuantity() {
+                  var quantityInput = document.getElementById('quantityInput');
+                  var quantity = parseInt(quantityInput.value);
+                  var stock = {{ product.stock }}; // Get the available stock from the server-side
+              
+                  if (quantity <= 0 || isNaN(quantity)) {
+                    alert('Please enter a valid quantity.');
+                    return false;
+                  }
+              
+                  if (quantity > stock) {
+                    alert('The requested quantity exceeds the available stock.');
+                    return false;
+                  }
+              
+                  return true;
+                }
+              
+                function decreaseQuantity() {
+                  var quantityInput = document.getElementById('quantityInput');
+                  var currentQuantity = parseInt(quantityInput.value);
+              
+                  if (currentQuantity > 1) {
+                    quantityInput.value = currentQuantity - 1;
+                  }
+                }
+              
+                function increaseQuantity() {
+                  var quantityInput = document.getElementById('quantityInput');
+                  var currentQuantity = parseInt(quantityInput.value);
+              
+                  quantityInput.value = currentQuantity + 1;
+                }
+              </script>
+              
+              
+             
+              
+            
+        </div>
+    </div>
+    <div class="row px-xl-5">
+        <div class="col">
+            <div class="nav nav-tabs justify-content-center border-secondary mb-4">
+                <a class="nav-item nav-link active" data-toggle="tab" href="#tab-pane-1">Description</a>
+                <!-- <a class="nav-item nav-link" data-toggle="tab" href="#tab-pane-2">Information</a> -->
+                <a class="nav-item nav-link" data-toggle="tab" href="#tab-pane-3">Reviews (1)</a>
+            </div>
+            <div class="tab-content">
+                <div class="tab-pane fade show active" id="tab-pane-1">
+                    <h4 class="mb-3">Product Description</h4>
+                    <p>{{product.products.desc}}.</p>
+                </div>
+    
+                <div class="tab-pane fade" id="tab-pane-3">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h4 class="mb-4">1 review for {{product.products.name}}</h4>
+                            <div class="media mb-4">
+                                <!-- <img src="img/user.jpg" alt="Image" class="img-fluid mr-3 mt-1" style="width: 45px;"> -->
+                                <div class="media-body">
+                                    <h6>Akash ak<small> - <i>01 Jan 2023</i></small></h6>
+                                    
+                                    <p> "The {{product.products.name}} Speedmaster Professional, commonly referred to as the "Moonwatch," holds a special place in the hearts of watch enthusiasts and space exploration enthusiasts alike. This iconic timepiece has been part of all six lunar missions and is known for its reliability and historical significance.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h4 class="mb-4">Leave a review</h4>
+                            <small>Your email address will not be published. Required fields are marked *</small>
+                          
+                            <form>
+                                <div class="form-group">
+                                    <label for="message">Your Review *</label>
+                                    <textarea id="message" cols="30" rows="5" class="form-control"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="name">Your Name *</label>
+                                    <input type="text" class="form-control" id="name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Your Email *</label>
+                                    <input type="email" class="form-control" id="email">
+                                </div>
+                                <div class="form-group mb-0">
+                                    <input type="submit" value="Leave Your Review" class="btn btn-primary px-3">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-fluid py-5">
+    <div class="text-center mb-4">
+        <h2 class="section-title px-5"><span class="px-2">You May Also Like</span></h2>
+    </div>
+    <div id="related-products-carousel" class="carousel slide" data-ride="carousel">
+        <div class="carousel-inner">
+            {% for related_product in related_products %}
+            {% if forloop.first or forloop.counter0|divisibleby:3 %}
+            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                <div class="row px-xl-5">
+            {% endif %}
+            <div class="col-md-4 mb-4">
+                <div class="card product-item border-0">
+                    {% with variant=related_product.productvariant_set.all|random %}
+                    <a href="{% url 'product_detail' variant.slug %}">
+                        <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                            <img class="img-fluid w-100" src="{{ variant.displayimage.url }}" alt="fossil">
+                        </div>
+                    </a>
+                    <!-- <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                        <h6 class="text-truncate mb-3">{{ related_product.name }}</h6>
+                        <div class="d-flex justify-content-center">
+                            <h6>{{ related_product.price }}</h6>
+                            <h6 class="text-muted ml-2"><del>{{ related_product.old_price }}</del></h6>
+                        </div>
+                    </div> -->
+                    {% endwith %}
+                    <!-- <div class="card-footer d-flex justify-content-between bg-light border">
+                        <a href="#" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>
+                        <a href="#" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</a>
+                    </div> -->
+                </div>
+            </div>
+            {% if forloop.counter|divisibleby:3 or forloop.last %}
+                </div>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+        <a class="carousel-control-prev" href="#related-products-carousel" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#related-products-carousel" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+        </a>
+    </div>
+</div>
+
+
+
+
+
+
+{% block last %}
+
+<script type="text/javascript">
+    $('.imgBox').imgZoom({
+        boxWidth: 400,
+        boxHeight: 400,
+        marginTop: 330,
+        marginLeft: 17,
+        origin: 'data-origin'
+    });
+</script>
+
+
+
+<script>
+    function decreaseQuantity() {
+      var quantityInput = document.getElementById('quantityInput');
+      var currentValue = parseInt(quantityInput.value);
+      if (currentValue > 1) {
+        quantityInput.value = currentValue - 1;
+      }
+    }
+  
+    function increaseQuantity() {
+      var quantityInput = document.getElementById('quantityInput');
+      var currentValue = parseInt(quantityInput.value);
+      quantityInput.value = currentValue + 1;
+    }
+  </script>
+
+
+{% endblock %}
+
+{% block final %}
+
+{% endblock %}
+
+
+
+{% endblock %}

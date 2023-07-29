@@ -1,0 +1,9 @@
+{% autoescape off %}
+Welcome to eshop-kerala
+
+Hello {{ name }}
+
+Please Click below link for reseting your password:
+Confirm Link: http://{{ domain }}{% url 'activate_password' uid64=uid token=token %}
+
+{% endautoescape %}

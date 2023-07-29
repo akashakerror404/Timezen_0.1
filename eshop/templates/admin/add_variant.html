@@ -1,0 +1,56 @@
+{%extends 'baseadmin.html'%}
+{% load static %}
+{% block title %}
+Add Variant
+{% endblock %}
+{% block content %}
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+
+
+<div class="container">
+  {% if messages %}
+  <ul class="messages">
+    {% for message in messages %}
+      <li{% if message.tags %} class="{{ message.tags }} text-danger"{% endif %}>{{ message }}</li>
+    {% endfor %}
+  </ul>
+{% endif %}
+  <h2>Add Variant for {{ prodt.name }}</h2>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="col-sm-9">
+        <select class="form-control text-black" name="colour" id="id_category">
+          <option value="">Select Colur  Variant</option>
+          {% for colour in color %}
+            <option value="{{ colour.colour }}">{{ colour.colour }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="container mt-3">
+        <!-- Create the Bootstrap button with a link -->
+        <a href="{% url 'add_color' %}" class="btn btn-primary">Add Colour</a>
+    </div>
+   
+    <div class="form-group">
+      <label for="stock">Stock:</label>
+      <input type="number" class="form-control" id="stock" name="stock" required>
+    </div>
+    <div class="form-group">
+      <label for="display_image">Display Image:</label>
+      <input type="file" class="form-control" id="display_image" name="display_image" accept="image/*" required>
+    </div>
+    <div class="mb-3">
+        <label for="exampleInputImage" class="form-label">Add Images</label>
+        <input type="file" class="form-control" name="image" id="exampleInputImage" multiple>
+    </div>
+    
+    <button type="submit" class="btn btn-primary">Add Variant</button>
+  </form>
+</div>
+{% endblock %}

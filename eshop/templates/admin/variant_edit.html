@@ -1,0 +1,113 @@
+{%extends 'baseadmin.html'%}
+{% load static %}
+{% block title %}
+Edit Variant
+{% endblock %}
+{% block link %}
+<style>
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.form-control {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.btn-submit {
+  padding: 10px 20px;
+  background-color: #3572b0;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-submit:hover {
+  background-color: #204d7d;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<br>
+<br>
+<br>
+<form method="POST" enctype="multipart/form-data">
+  {% csrf_token %}
+  <br>
+  <br>
+  <div class="form-group">
+    <label class="form-label" for="product-name">Product Name : {{ variant.products.name }}</label>
+    <!-- <input class="form-control" type="text" id="product-name" name="productname" value="{{ variant.products.name }}"> -->
+  </div>
+  <div class="form-group">
+    <label class="form-label" for="stock">Stock:</label>
+    <input class="form-control" type="number" id="stock" name="stock" value="{{ variant.stock }}" required>
+  </div>
+  <!-- <div class="form-group">
+    <label class="form-label" for="colour">Colour:</label>
+    <input class="form-control" type="text" id="colour" name="colour" value="{{ variant.colour.colour }}">
+  </div> -->
+  <div class="col-sm-9">
+    <select class="form-control text-black" name="colour" id="id_category" required>
+      <option value="">Select Colour Variant</option>
+      {% for colour in colours %}
+        <option value="{{ colour.colour }}">{{ colour.colour }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  
+  <br>
+  
+  <div class="form-group">
+    <label class="form-label" for="image1">Display Image :</label>
+    <input class="form-control" type="file" id="image1" name="display_image" required>
+  </div>
+
+  <div class="mb-3">
+    <label for="exampleInputImage" class="form-label">Add Images</label>
+    <input type="file" class="form-control" name="images" id="exampleInputImage" multiple>
+  </div>
+  
+  <input class="btn-submit" type="submit" value="Save">
+</form>
+<br>
+
+<div class="form-group">
+  <label class="form-label">Display Image:</label>
+  <img src="{{ variant.displayimage.url }}" alt="Product Image" width="200" height="200">
+</div>
+
+<div class="form-group">
+  <label class="form-label">All Images:</label>
+  {% for image in images %}
+    <img src="{{ image.image.url }}" alt="Product Image" width="200" height="200">
+  {% endfor %}
+</div>
+
+<script>
+  function validateForm() {
+    var displayImageInput = document.getElementById('image1',);
+    if (displayImageInput.files.length === 0) {
+      alert('Please select a display image.');
+      return false;
+    }
+    return true;
+  }
+
+  document.querySelector('form').addEventListener('submit', function(event) {
+    if (!validateForm()) {
+      event.preventDefault();
+    }
+  });
+</script>
+{% endblock %}

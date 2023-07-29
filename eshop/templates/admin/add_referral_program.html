@@ -1,0 +1,66 @@
+{% extends 'baseadmin.html' %}
+
+{% block title %}Create Coupon{% endblock %}
+
+{% block content %}
+<br>
+<br>
+<br>
+<br>
+<br>
+<div class="container py-5">
+    {% if no_referral_programs %}
+        <div class="alert alert-info">
+            No referral program available.
+            <h3>Create Referral Program</h3>
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea class="form-control" id="description" name="description" rows="4"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="userwallet">User Wallet Amount</label>
+                    <input type="number" class="form-control" id="userwallet" name="userwallet" value="50">
+                </div>
+                <div class="form-group">
+                    <label for="referrerdwallet">Referrer's Wallet Amount</label>
+                    <input type="number" class="form-control" id="referrerdwallet" name="referrerdwallet" value="100">
+                </div>
+                <button type="submit" class="btn btn-primary">Create Referral Program</button>
+            </form>
+
+
+        </div>
+
+    {% else %}
+        <div class="card shadow">
+            <div class="card-body">
+                <h3>Existing Referral Programs</h3>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Description</th>
+                            <th>User Wallet Amount</th>
+                            <th>Referrer's Wallet Amount</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for program in referral_programs %}
+                        <tr>
+                            <td>{{ program.description }}</td>
+                            <td>{{ program.userwallet }}</td>
+                            <td>{{ program.referrerdwallet }}</td>
+                            <td>
+                                <a href="{% url 'edit_referral_program' program.id %}" class="btn btn-sm btn-primary">Edit</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

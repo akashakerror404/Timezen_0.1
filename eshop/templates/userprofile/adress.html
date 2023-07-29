@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+address selection
+{% endblock %}
+
+{% block link %}
+<style>
+    .custom-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        height: 120vh;
+    }
+
+    .address-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        margin-bottom: 20px;
+    }
+
+    .address-container p {
+        margin: 0;
+    }
+
+    .add-address-button {
+        margin-top: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 150px;
+        height: 40px;
+        border-radius: 20px;
+        background-color: #F1B709;
+        color: #fff;
+        font-weight: bold;
+        text-decoration: none;
+    }
+
+    .add-address-button i {
+        margin-right: 5px;
+    }
+
+    .select-address {
+        margin-top: 10px;
+    }
+
+    .edit-address-button {
+        margin-top: 10px;
+        display: none; /* Hide the buttons by default */
+    }
+</style>
+{% endblock %}
+
+{% block user %}
+    <a href="" class="btn border">
+        <i class="fa fa-user" aria-hidden="true" style="color: #F1B709;"></i>
+        <span class="badge">{{ user }}</span>
+    </a>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid col-lg-10">
+    <div class="custom-containe d-flex row">
+        <br>
+        <br>
+
+        <div class="col-lg-8 ">
+            <h3>Address selection Pageeee</h3>
+            <hr>
+            
+            <div class="container" style="max-height: 400px; overflow-y: auto;">
+                <div class="d-flex row">
+                    {% if user.is_authenticated %}
+                        {% for address in addresses %}
+                        <div class="card col-lg-12">
+                            <div class="card-body">
+                                <h5 class="card-title">Shipping Address</h5>
+                                <p class="card-text">{{ address.first_name }} {{ address.last_name }}</p>
+                                <p class="card-text">{{ address.address }}</p>
+                                <p class="card-text">{{ address.phone }}</p>
+                                <p class="card-text">{{ address.city }}, {{ address.state }}, {{ address.country }}, {{ address.pincode }}</p>
+                                <div class="form-check select-address">
+                                    <input class="form-check-input" type="radio" name="selectedAddress" id="selectedAddress{{ address.id }}" value="{{ address.id }}" {% if address == selected_address %}checked{% endif %}>
+                                    <label class="form-check-label" for="selectedAddress{{ address.id }}">Select Address</label>
+                                </div>
+                                <a href="{% url 'edit_address' address.id %}" class="btn btn-primary edit-address-button">Edit Address</a>
+                                <a href="{% url 'place_order' address.id %}" class="btn btn-primary edit-address-button">Use this address</a>
+                            </div>
+                        </div>
+                        {% empty %}
+                            <p>No shipping addresses found.</p>
+                            <p>Please log in to view your shipping address.</p>
+                        {% endfor %}
+                    {% else %}
+                        <p>Please log in to view your shipping address.</p>
+                    {% endif %}
+                </div>
+            </div>
+            
+            
+            
+            <a href="{% url 'add_address' %}" class="add-address-button">
+                <i class="fa fa-plus" aria-hidden="true"></i>
+                Add Address
+            </a>
+        </div>
+        <br>
+        <br>
+        <div class="col-lg-4 mt-4 mb-5 my-8">
+            <div class="card border-secondary mb-5">
+                <div class="card-header bg-secondary border-0">
+                    <h4 class="font-weight-semi-bold m-0">Order Total</h4>
+                </div>
+                <div class="card-body">
+                    <h5 class="font-weight-medium mb-3">Products</h5>
+                    {% for cart_item in cart_items %}
+                    <div class="d-flex justify-content-between">
+                        <p>{{ cart_item.product.products.name }}</p>
+                        <p>{{ cart_item.price }}</p>
+                    </div>
+                    {% endfor %}
+                    <hr class="mt-0">
+                </div>
+                <div class="card-footer border-secondary bg-transparent">
+                    <div class="d-flex justify-content-between mt-2">
+                        <h5 class="font-weight-bold">Total</h5>
+                        <h5 class="font-weight-bold">{{ cart_total }}</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+            
+
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $(".edit-address-button").hide(); // Hide the buttons by default
+
+        $("input[name='selectedAddress']").change(function() {
+            $(".edit-address-button").hide(); // Hide all the buttons
+
+            if ($(this).is(":checked")) {
+                $(this).closest(".card-body").find(".edit-address-button").show(); // Show the buttons in the selected address card
+            }
+        });
+    });
+</script>
+{% endblock %}
