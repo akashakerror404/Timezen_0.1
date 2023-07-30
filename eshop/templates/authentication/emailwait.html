@@ -5,7 +5,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>reset password</title>
+    <title>email verification</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="Free HTML Templates" name="keywords">
     <meta content="Free HTML Templates" name="description">
@@ -25,6 +25,18 @@
 
     <!-- Customized Bootstrap Stylesheet -->
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
+
+    <!-- Custom CSS for centering the image -->
+    <style>
+        .image-container {
+            height: 400px; /* Set the height you want for the container */
+        }
+
+        .image-container img {
+            max-height: 100%;
+            max-width: 100%;
+        }
+    </style>
 </head>
 
 <body>
@@ -67,57 +79,26 @@
             <div class="col-lg-3 col-12 d-flex justify-content-center justify-content-lg-start">
                 <a href="" class="text-decoration-none">
                     <h1 class="m-0 display-5 font-weight-semi-bold">
-                        <span class="text-primary font-weight-bold border px-3 mr-1">E</span>Shope
+                        <span class="text-primary font-weight-bold border px-3 mr-1">TIME</span>ZEN
                     </h1>
                 </a>
             </div>
         </div>
-        
-        
-        <section class="vh-100 bg-image" style="margin-top: -90px;">
- <div class="mask d-flex align-items-center h-100 gradient-custom-3">
-    <div class="container h-100">
-      <div class="row d-flex justify-content-center align-items-center h-100">
-        <div class="col-12 col-md-9 col-lg-7 col-xl-6">
-          <div class="card" style="border-radius: 15px;">
-            <div class="card-body p-5">
-              <h2 class="text-uppercase text-center mb-5">Login</h2>
+    </div> <!-- End of Topbar -->
 
-              <form action="/reset_password" method="post">{% csrf_token %}
-
-
-                
-                  
-                
-                  
-                <div class="form-outline mb-4">
-                    <label class="form-label" for="form3Example1cg">Password</label>
-                    <input type="password" id="pass1" name="pass1" class="form-control form-control-lg" required />
-                </div>
-                <div class="form-outline mb-4">
-                    <label class="form-label" for="form3Example1cg">Password 2</label>
-                    <input type="password" id="pass2" name="pass2" class="form-control form-control-lg" required/>
-                </div>
-                
-                <div class="d-flex justify-content-center">
-                    <button type="submit" class="btn btn-success btn-block btn-lg gradient-custom-4 text-body" style="background-color: #F1B709; color: white; border-color: transparent;">submit</button>
-
-                </div>
-                <!-- <p class="text-center text-muted mt-5 mb-0">Forget <a href="/forgetpassword"
-                    class="fw-bold text-body"><u>Password</u></a></p> -->
-
-                <!-- <p class="text-center text-muted mt-5 mb-0">Create a new account <a href="/signup"
-                    class="fw-bold text-body"><u>Create here</u></a></p> -->
-
-              </form>
-
-            </div>
-          </div>
-        </div>
-      </div>
+    <h1>Welcome to Time Zen!</h1>
+   
+    <!-- Add a container to center the image -->
+    <div class="image-container d-flex justify-content-center align-items-center">
+        <img src="{% static 'img/email.jpg' %}" alt="Email Verification Image">
     </div>
-  </div>
-</section>
-    </div>
+
+    <p>
+        If you haven't received the email, please check your spam folder or contact our support team for assistance.
+    </p>
+    <p>
+        Enjoy your shopping experience at Time Zen, and feel free to explore our wide range of products!
+    </p>
 </body>
+
 </html>

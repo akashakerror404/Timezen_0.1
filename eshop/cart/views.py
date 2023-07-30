@@ -31,25 +31,14 @@ def add_to_cart(request, slug):
 
         if productvariant.category.categoryoffer:
             discount=price*productvariant.category.categoryoffer/100
-
             price -= discount
             price = round(price, 0)
-        
         else:
             if productvariant.discountprice:
                 price = Decimal(productvariant.discountprice)
             else:
                 price = Decimal(productvariant.price)
-
-
-
-
-
-        
         totalprice = price * Decimal(quantity)
-
-
-
         # totalprice = price * Decimal(quantity)
 
         try:
@@ -88,8 +77,6 @@ def add_to_wish(request, slug):
 
         if productvariant.category.categoryoffer:
             discount=price*productvariant.category.categoryoffer/100
-            print("discount>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-
             price -= discount
             price = round(price, 0)
         
@@ -122,11 +109,6 @@ def add_to_wish(request, slug):
     return render(request, 'cart/wish.html')
 
 
-
-
-
-
-
 @login_required(login_url='signin')
 
 def wish_list(request):
@@ -147,7 +129,6 @@ def wish_list(request):
         messages.info(request, "Your Wish is empty!")
 
         return redirect('shop')
-
 
 @login_required(login_url='signin')  # Add the login_required decorator to restrict access
 @cache_control(no_store=True,no_cache=True,must_revalidate=True)
@@ -172,10 +153,6 @@ def cart(request):
             if category.categoryoffer:
                 has_category_offer = True
                 break
-        
-
-        
-        
         coupon_status = None  # Assign a default value to coupon_status
         discount = 0  # Assign a default value to discount
 
@@ -194,7 +171,6 @@ def cart(request):
                     total_price -= coupon.discount_price
                 else:
                     coupon_status = 'already_used'  # Set the coupon status as 'already_used'
-                    print("already used this coupon for this user")
                     # User has already applied the coupon
                     # Handle this case as per your requirements
                 
@@ -221,12 +197,6 @@ def cart(request):
 
 
 
-
-
-
-
-
-
 def quantity_update(request, slug):
     if request.method == 'POST':
         quantity = int(request.POST.get('quantity'))
@@ -242,8 +212,6 @@ def quantity_update(request, slug):
 
         if productvariant.category.categoryoffer:
             discount=price*productvariant.category.categoryoffer/100
-            print("discount>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-
             price -= discount
             price = round(price, 0)
         
@@ -253,8 +221,6 @@ def quantity_update(request, slug):
             else:
                 price = Decimal(productvariant.price)
         totalprice = price * Decimal(quantity)
-
-
         if quantity <= product.stock:
             try:
                 cart = UserCart.objects.get(user=user)
@@ -265,11 +231,6 @@ def quantity_update(request, slug):
             cart_item.quantity = quantity
             cart_item.price = totalprice
             cart_item.save()
-
-            print("done cart updated")
-        else:
-            print("Requested quantity exceeds available stock")
-
         return redirect('cart')
 # deleteing product from cart
 
@@ -282,10 +243,8 @@ def delete_cart(request, product_id):
         
         for cart_item in cart_items:
             cart_item.delete()
-        
-        print("Cart items deleted successfully.")
     except (UserCart.DoesNotExist, Cart.DoesNotExist):
-        print("Cart or cart items do not exist.")
+        pass
 
     return redirect('cart')  # rediract cart
 
@@ -299,9 +258,8 @@ def delete(request, product_id):
         for wish_item in wish_items:
             wish_item.delete()
         
-        print("Cart items deleted successfully.")
     except (UserWart.DoesNotExist, Wart.DoesNotExist):
-        print("Cart or cart items do not exist.")
+        pass
 
     return redirect('wish_list')  # rediract cart
 

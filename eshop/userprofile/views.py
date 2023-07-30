@@ -20,11 +20,9 @@ from django.core.mail import send_mail
 from authentication.models import *
 from cart.models import *
 from django.http import HttpResponseRedirect
-# Create your views here.
-
 from django.views.decorators.cache import cache_control,never_cache
 from django.views.decorators.cache import cache_control
-
+from django.db.models import Sum
 
 
 def add_address(request):
@@ -38,9 +36,6 @@ def add_address(request):
         phone = request.POST.get('phone')
         email = request.POST.get('email')
         state = request.POST.get('state')
-
-        print("post done")
-
         # Create a new Address instance and save it
         address_obj = Address(
             user=request.user,
@@ -55,32 +50,22 @@ def add_address(request):
             state=state
         )
         address_obj.save()
-        print("post done save adress")
-
-
         return redirect('adress_selection')
     else :
         return render (request,'userprofile/add_adress.html')
 
         
 
-from django.db.models import Sum
 @login_required(login_url='signin') 
 @cache_control(no_store=True,no_cache=True,must_revalidate=True)
 def adress_selection(request):
-    
     user = request.user
     cart_id = UserCart.objects.get(user=user)
     cart_iteam=Cart.objects.filter(cart_id=cart_id)
     if cart_iteam:
-
-
-
-    
         cart_items = Cart.objects.filter(cart_id=cart_id)
         cart_total = cart_items.aggregate(total_price=Sum('price'))['total_price']
         cart_count = cart_items.exists()
-
         if cart_count:
             addresses = Address.objects.filter(user=user)
             context = {
@@ -94,11 +79,9 @@ def adress_selection(request):
     else:
         return redirect('shop')
 
-
 @login_required(login_url='signin') 
 def edit_address(request, address_id):
     address = get_object_or_404(Address, id=address_id, user=request.user)
-
     if request.method == 'POST':
         # Retrieve updated address data from the form
         first_name = request.POST.get('firstname')
@@ -122,10 +105,9 @@ def edit_address(request, address_id):
         address.email = email
         address.state = state
         address.save()
-
         return redirect('adress_selection')  # Redirect to the address view or any other appropriate page
     else:
-        print("not ok")
+        pass
 
         return render(request, 'userprofile/edit_adress.html',{'address':address})
 
@@ -133,23 +115,14 @@ def payment_page(request,address_id):
     address=Address.objects.get
     user=request.user
     cart_id=UserCart.objects.ge(user=user)
-
     products=Cart.objects.filter(cart_id=cart_id)
     producttotal=Cart.objects.filter(cart_id=cart_id).aggregate(total_price=Sum('price'))
     return render(request,'pyment.html')
 
-
 @login_required(login_url='signin') 
 def initiate_payment(request):
     amount = request.POST.get('total_price')
-    print(amount)
-    print("amount")
-
     amount = int(float(amount))
-    print("amount>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-
-    print(amount)
-
     order_amount = amount * 100
     order_currency = 'INR'
     order_receipt = 'order_receipt'
@@ -164,12 +137,10 @@ def initiate_payment(request):
          'receipt': order_receipt,
          'payment_capture': 1}  # Set payment_capture to 0 for manual capture
     )
-    print(razorpay_order)
     razorpay_order_id = razorpay_order['id']
-
     amount = razorpay_order['amount']
-
     return JsonResponse({'razorpay order id': razorpay_order_id, 'amount': amount})
+
 @login_required(login_url='signin')
 @cache_control(no_store=True,no_cache=True,must_revalidate=True)
 def place_order(request,address_id):
@@ -177,32 +148,18 @@ def place_order(request,address_id):
     cart = UserCart.objects.get(user = request.user)
     cart_iteam=Cart.objects.filter(cart_id=cart)
     if cart_iteam:
-
         address = get_object_or_404(Address, id=address_id, user=request.user)
         cart_id=UserCart.objects.get(user=user)
         buyer_wallet = Wallet.objects.get(user=user)
         wallet_total = buyer_wallet.Wallettotal
-
-        print("buyer___________________________wallet")
-        print(wallet_total)
-
-
         productstotal=Cart.objects.filter(cart_id=cart_id).aggregate(total_price=Sum('price'))
         subtotal_price=productstotal['total_price']
         if cart_id.coupons :
-            
             discount_price = cart_id.coupons.discount_price if cart_id.coupons else 0  # Check if a coupon exists and get the discount price, otherwise set it to 0
             total_price = int(subtotal_price - discount_price) if cart_id.coupons else subtotal_price
 
         else:
             total_price = subtotal_price
-        # if cart_id.coupons:
-        #     user_coupon, _ = Usercoupon.objects.get_or_create(user=user, coupon=cart_id.coupons)
-        #     user_coupon.total_price = total_price
-        #     user_coupon.save()
-
-
-
         context = {
             'subtotal_price':subtotal_price,
             'address': address,
@@ -229,9 +186,6 @@ def order_placed(request,address_id):
 
     else:
         total_price = subtotal_price
-
-
-
     order=Order.objects.create(
         user=user,
         address=address,
@@ -239,20 +193,7 @@ def order_placed(request,address_id):
         payment_status='ORDERED',
         payment_method='CASH_ON_DELIVERY'
         )
-    
-    # subject= " eshop-experience the online shoping"
-    # message="Hello" + user.username + "\n" + "Thank you for shopping at our e-shop. We have successfully received your order. We will process it as soon as possible.\n\nThank you for choosing us!\n\nBest regards,\nThe e-shop Team"
-
-    # from_email=settings.EMAIL_HOST_USER
-    # to_list=[user.email]
-    # send_mail(subject,message,from_email,to_list,fail_silently=True)
-    # print(send_mail)
-    # print("send_______________mail")
-
-
     cart_item=Cart.objects.filter(cart_id=cart_id)
-   
-
     for product in cart_item:
         Orderlist.objects.create(order_id=order,
                                 product=product.product,
@@ -273,12 +214,6 @@ def order_placed(request,address_id):
         
         cart_id.coupons = None  # Set the coupons field to NULL
         cart_id.save()
-        
-
-
-
-
-
     context={
         'order':order,
         'order_id': order.id
@@ -288,7 +223,6 @@ def order_placed(request,address_id):
     return JsonResponse({'order_id': order.id})
 @login_required(login_url='signin') 
 def order_wallet(request,address_id):
-    print("its hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
     address=Address.objects.get(id=address_id)
     user=request.user
     cart_id=UserCart.objects.get(user=user)
@@ -297,13 +231,8 @@ def order_wallet(request,address_id):
     if cart_id.coupons :
         discount_price = cart_id.coupons.discount_price if cart_id.coupons else 0  # Check if a coupon exists and get the discount price, otherwise set it to 0
         total_price = int(subtotal_price - discount_price) if cart_id.coupons else subtotal_price
-
     else:
         total_price = subtotal_price
-
-    
-
-
     order=Order.objects.create(
         user=user,
         address=address,
@@ -314,14 +243,7 @@ def order_wallet(request,address_id):
     buyer_wallet = Wallet.objects.get(user=user)
     buyer_wallet.Wallettotal -= total_price
     buyer_wallet.save()
-    
-   
-
-
     cart_item=Cart.objects.filter(cart_id=cart_id)
-    
-
-
     for product in cart_item:
         Orderlist.objects.create(order_id=order,
                                 product=product.product,
@@ -330,37 +252,23 @@ def order_wallet(request,address_id):
         
         varinat=product.product
         varinat.stock -=product.quantity
-        print(varinat.stock)
         varinat.save()
-        
-
-
-         # Decrease the stock by the ordered quantity                      
         product.delete()
         if cart_id.coupons:
             user_coupon = Usercoupon.objects.create(user=user,coupon=cart_id.coupons,total_price=total_price)
-        
         cart_id.coupons = None  # Set the coupons field to NULL
         cart_id.save()
-        
-
-
-
-
-
     context={
         'order':order,
         'order_id': order.id
 
     }
-
     return render(request,'userprofile/orderinvoice.html',context)
+
 @login_required(login_url='signin') 
 def order_placed_razopay(request, address_id):
     if request.method == 'POST':
         payment_id = request.POST.get('payment_id')
-        print(payment_id)
-
         address = Address.objects.get(id=address_id)
         user = request.user
         cart_id = UserCart.objects.get(user=user)
@@ -372,8 +280,6 @@ def order_placed_razopay(request, address_id):
             total_price = int(subtotal_price - discount_price) if cart_id.coupons else subtotal_price
         else:
             total_price = subtotal_price
-       
-
         order = Order.objects.create(
             user=user,
             address=address,
@@ -386,9 +292,6 @@ def order_placed_razopay(request, address_id):
         # Capture the payment using Razorpay API
         client = razorpay.Client(auth=('rzp_test_MZaMhRtV2louDb', 'dT2bluVIx4ea7S7F9xGh8BVN'))
         capture_response = client.payment.capture(payment_id, float(total_price) * 100)  # Capture the payment amount
-        print(capture_response)
-
-
         cart_items = Cart.objects.filter(cart_id=cart_id)
 
         for product in cart_items:
@@ -415,6 +318,7 @@ def order_placed_razopay(request, address_id):
     else:
         return JsonResponse({'error': 'Invalid request method'})
 
+
 @cache_control(private=True, no_store=True, no_cache=True, must_revalidate=True)
 @login_required(login_url='signin')
 def order_confirmation(request, order_id):
@@ -438,7 +342,6 @@ def user_orders_list(request):
     context = {
         'orders': page_obj,
     }
-    
     return render(request, 'userprofile/user_orders_list.html', context)
 
 
@@ -483,10 +386,9 @@ def delete_order(request, order_id):
                 print("Refund failed or not processed")
 
         order.save()
-        print(f"Order {order_id} deleted")
 
     except Order.DoesNotExist:
-        print("Order does not exist")
+        pass
 
     return redirect('user_orders_list')
 
@@ -498,9 +400,6 @@ def refund_method(request, order_id):
     try:
         order = Order.objects.get(user=user, id=order_id)
         amount=order.total_price
-        print("amound________________")
-        print(amount)
-
         order_lists = Orderlist.objects.filter(order_id=order)
 
         for order_list in order_lists:
@@ -510,38 +409,8 @@ def refund_method(request, order_id):
             product_variant.save()
             order.payment_status = 'RETURN'
             order.save()
-
-
-
-        # if order.payment_method == 'CASH_ON_DELIVERY':
-        #     buyer_wallet = Wallet.objects.get(user=user)
-        #     buyer_wallet.Wallettotal += amount
-        #     buyer_wallet.save()
-
-
-
-
-
-        #     # No refund needed for cash on delivery orders
-        #     order.payment_status = 'RETURN'
-        # else:
-        #     # Initiate refund using Razorpay API
-        #     client = razorpay.Client(auth=('rzp_test_MZaMhRtV2louDb', 'dT2bluVIx4ea7S7F9xGh8BVN'))
-        #     refund_response = client.payment.refund(order.payment_id, {'amount': int(order.total_price * 100)})
-
-        #     if refund_response['status'] == 'processed':
-        #         # Refund successful
-        #         order.payment_status = 'RETURN'  # Update the payment status to 'REFUNDED'
-        #         print(f"Order {order_id} refunded successfully")
-        #     else:
-        #         # Refund failed or not processed
-        #         print("Refund failed or not processed")
-
-        # order.save()
-        # print(f"Order {order_id} deleted")
-
     except Order.DoesNotExist:
-        print("Order does not exist")
+        pass
 
     return redirect('user_orders_list')
 
@@ -578,14 +447,8 @@ def userprofile(request):
         'personal_details': personal_details,  # Include the PersonalDetails object in the context
 
         }
-
-
-
-
-
-
-
     return render(request, 'userprofile/userprofile.html',context)
+
 
 @login_required(login_url='signin') 
 def wallet(request):

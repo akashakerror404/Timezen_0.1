@@ -179,8 +179,7 @@ home
                 <div class="position-relative bg-secondary text-center text-md-right text-white mb-2 py-5 px-5">
                     <img src="{% static 'img/wtach1.png'%}" alt="">
                     <div class="position-relative" style="z-index: 1;">
-                        <h5 class="text-uppercase text-primary mb-3">{{ max_offer_category.categoryoffer }} % off the all order</h5>
-                        <h1 class="mb-4 font-weight-semi-bold">{{ max_offer_category.name }}</h1>
+                        <h5 class="text-uppercase text-primary mb-3"> Big billings days </h5>
                         <a href="/shop" class="btn btn-outline-primary py-md-2 px-md-3">Shop Now</a>
                     </div>
                 </div>
@@ -189,8 +188,7 @@ home
                 <div class="position-relative bg-secondary text-center text-md-left text-white mb-2 py-5 px-5">
                     <img src="{% static 'img/wtach1.png'%}" alt="">
                     <div class="position-relative" style="z-index: 1;">
-                        <h5 class="text-uppercase text-primary mb-3">{{ max_offer_category.categoryoffer }} % off the all order</h5>
-                        <h1 class="mb-4 font-weight-semi-bold">{{ max_offer_category.name }}</h1>
+                        <h5 class="text-uppercase text-primary mb-3"> NOW SHOP AND SAVE</h5>
                         <a href="/shop" class="btn btn-outline-primary py-md-2 px-md-3">Shop Now</a>
                     </div>
                 </div>
@@ -222,19 +220,7 @@ home
                                         <img class="img-fluid w-100" src="{{ variant.displayimage.url }}" alt="fossil">
                                     </div>
                                 </a>
-                                <!-- <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                                    <h6 class="text-truncate mb-3">{{ i.name }}</h6>
-                                    <div class="d-flex justify-content-center">
-                                        {% if i.discountprice %}
-                                            <h6>RS : {{ i.discountprice }}</h6>
-                                        {% else %}
-                                            <h6>RS : {{ i.price }}</h6>
-                                        {% endif %}
-                                        {% if i.discountprice %}
-                                            <h6 class="text-muted ml-2"><del>{{ i.price }}</del></h6>
-                                        {% endif %}
-                                    </div>
-                                </div> -->
+                                
                                 {% endwith %}
                                 
                             </div>
