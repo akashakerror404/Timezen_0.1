@@ -71,7 +71,7 @@ def shop(request):
         prodt = prodt.filter(Q(price__range=(500, 1000)) | Q(discountprice__range=(500, 1000)))
     elif selected_price == '1000-2000':
         prodt = prodt.filter(Q(price__range=(1000, 2000)) | Q(discountprice__range=(1000, 2000)))
-    elif selected_price == '1000-2000':
+    elif selected_price == '2000-3000':
         prodt = prodt.filter(Q(price__range=(2000, 3000)) | Q(discountprice__range=(2000, 3000)))
     if search_query:
         prodt = prodt.filter(name__icontains=search_query)  # Filter products based on search query
@@ -100,6 +100,9 @@ def shop(request):
     return render(request, 'shop.html', context)
 
 
+def error(request):
+    return render(request, 'error404.html')
 
+    
 
 

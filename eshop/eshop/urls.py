@@ -19,7 +19,9 @@ from django.urls import path,include
 from django.conf.urls.static import static
 from django.conf import settings
 from adminside import views as admin_views
+from django.views.generic import TemplateView
 
+# from django.urls import handler404
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -29,10 +31,16 @@ urlpatterns = [
     path('',include('cart.urls')),
     path('',include('userprofile.urls')),
     path('',include('coupon.urls')),
+    path('404/', TemplateView.as_view(template_name='404/404.html'), name='custom_404_page'),
+    path('<str:slug>/', TemplateView.as_view(template_name='404/404.html')),
+
+
 
 
     
 
 
     ]
+# handler404 = 'store.views.error'
+
 urlpatterns=urlpatterns+static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

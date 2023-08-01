@@ -111,66 +111,79 @@ shop
     
         <div class="col-lg-3 col-md-12 col-8">
             <!-- Filter Start -->
-            <div class=" border-bottom mb-4 pb-4">
+            <div class="border-bottom mb-4 pb-4">
                 <h5 class="font-weight-semi-bold mb-4">Filter by price</h5>
                 <form id="filter-form" action="{% url 'shop' %}" method="GET">
                     <div class="d-none d-md-block">
-
-                    <div class="custom-control custom-radio d-flex align-items-center justify-content-between mb-3">
-                        <input type="radio" class="custom-control-input" name="price" value="all" id="price-all" {% if not selected_price %}checked{% endif %}>
-                        <label class="custom-control-label" for="price-all">All Price</label>
-                    </div>
-                    <div class="custom-control custom-radio d-flex align-items-center justify-content-between mb-3">
-                        <input type="radio" class="custom-control-input" name="price" value="500-1000" id="price-1" {% if selected_price == '500-1000' %}checked{% endif %}>
-                        <label class="custom-control-label" for="price-1">500 - 1000</label>
-                    </div>
-                    <div class="custom-control custom-radio d-flex align-items-center justify-content-between mb-3">
-                        <input type="radio" class="custom-control-input" name="price" value="1000-2000" id="price-2" {% if selected_price == '1000-2000' %}checked{% endif %}>
-                        <label class="custom-control-label" for="price-2">1000 - 2000</label>
-                    </div>
-                    <div class="custom-control custom-radio d-flex align-items-center justify-content-between mb-3">
-                        <input type="radio" class="custom-control-input" name="price" value="2000-3000" id="price-3" {% if selected_price == '2000-3000' %}checked{% endif %}>
-                        <label class="custom-control-label" for="price-3">2000 - 3000</label>
-                    </div>
-                </div>
-                <div class="d-md-none mb-3" style="width:10rem">
-                    <!-- Use a select dropdown for mobile view -->
-                    <select class="form-control" name="price">
-                        <option value="all" {% if not selected_price %}selected{% endif %}>All Price</option>
-                        <option value="500-1000" {% if selected_price == '500-1000' %}selected{% endif %}>500 - 1000</option>
-                        <option value="1000-2000" {% if selected_price == '1000-2000' %}selected{% endif %}>1000 - 2000</option>
-                        <option value="2000-3000" {% if selected_price == '2000-3000' %}selected{% endif %}>2000 - 3000</option>
-                    </select>
-                </div>
-                
-                <div class="d-none d-md-block">
+                        <!-- Radio buttons for desktop view -->
+                        <div class="custom-control custom-radio d-flex align-items-center justify-content-between mb-3">
+                          <input type="radio" class="custom-control-input" name="price" value="all" id="price-all" {% if not selected_price %}checked{% endif %}>
+                          <label class="custom-control-label" for="price-all">All Price</label>
+                        </div>
+                        <div class="custom-control custom-radio d-flex align-items-center justify-content-between mb-3">
+                          <input type="radio" class="custom-control-input" name="price" value="500-1000" id="price-1" {% if selected_price == '500-1000' %}checked{% endif %}>
+                          <label class="custom-control-label" for="price-1">500 - 1000</label>
+                        </div>
+                        <div class="custom-control custom-radio d-flex align-items-center justify-content-between mb-3">
+                          <input type="radio" class="custom-control-input" name="price" value="1000-2000" id="price-2" {% if selected_price == '1000-2000' %}checked{% endif %}>
+                          <label class="custom-control-label" for="price-2">1000 - 2000</label>
+                        </div>
+                        <div class="custom-control custom-radio d-flex align-items-center justify-content-between mb-3">
+                          <input type="radio" class="custom-control-input" name="price" value="2000-3000" id="price-3" {% if selected_price == '2000-3000' %}checked{% endif %}>
+                          <label class="custom-control-label" for="price-3">2000 - 3000</label>
+                        </div>
+                      </div>
+                      
+                      <!-- Dropdown for mobile view -->
+                      <div class="d-md-none">
+                        <select class="form-control" name="price-mobile" id="price-mobile">
+                          <option value="all" {% if not selected_price %}selected{% endif %}>All Price</option>
+                          <option value="500-1000" {% if selected_price == '500-1000' %}selected{% endif %}>500 - 1000</option>
+                          <option value="1000-2000" {% if selected_price == '1000-2000' %}selected{% endif %}>1000 - 2000</option>
+                          <option value="2000-3000" {% if selected_price == '2000-3000' %}selected{% endif %}>2000 - 3000</option>
+                        </select>
+                      </div>
+                      
+                    
                     <!-- Color Start -->
                     <h5 class="font-weight-semi-bold mb-4">Filter by color</h5>
-                    <div class="custom-control custom-radio d-flex align-items-center justify-content-between mb-3">
-                        <input type="radio" class="custom-control-input" name="color" value="" id="color-all" {% if selected_color == '' %}checked{% endif %}>
-                        <label class="custom-control-label" for="color-all">All Color</label>
-                    </div>
-        
-                    {% for colour in colours %}
-                    <div class="custom-control custom-radio d-flex align-items-center justify-content-between mb-3">
-                        <input type="radio" class="custom-control-input" name="color" value="{{ colour.id }}" id="color-{{ colour.id }}" {% if selected_color == colour.id %}checked{% endif %}>
-                        <label class="custom-control-label" for="color-{{ colour.id }}">{{ colour.colour }}</label>
-                    </div>
-                    {% endfor %}
-                    <!-- Color End -->
+                    <!-- Radio buttons for desktop view -->
+            <div class="d-none d-md-block">
+                <div class="custom-control custom-radio d-flex align-items-center justify-content-between mb-3">
+                <input type="radio" class="custom-control-input" name="color" value="" id="color-all" {% if not selected_color %}checked{% endif %}>
+                <label class="custom-control-label" for="color-all">All Color</label>
                 </div>
-                <div class="d-md-none mb-3" style="width:10rem">
-                    <!-- Use a select dropdown for mobile view -->
-                    <select class="form-control" name="color" >
-                        <option value="" {% if not selected_color %}selected{% endif %}>All Color</option>
-                        {% for colour in colours %}
-                        <option value="{{ colour.id }}" {% if selected_color == colour.id %}selected{% endif %}>{{ colour.colour }}</option>
-                        {% endfor %}
-                    </select>
+            
+                {% for colour in colours %}
+                <div class="custom-control custom-radio d-flex align-items-center justify-content-between mb-3">
+                <input type="radio" class="custom-control-input" name="color" value="{{ colour.id }}" id="color-{{ colour.id }}" {% if selected_color == colour.id %}checked{% endif %}>
+                <label class="custom-control-label" for="color-{{ colour.id }}">{{ colour.colour }}</label>
                 </div>
-                
-                    <button type="submit" class="btn btn-primary">Apply</button>
+                {% endfor %}
+                <!-- Color End -->
+            </div>
+            
+            <!-- Dropdown for mobile view -->
+            <div class="d-md-none">
+                <select class="form-control" name="color-mobile" id="color-mobile">
+                <option value="" {% if not selected_color %}selected{% endif %}>All Color</option>
+                {% for colour in colours %}
+                <option value="{{ colour.id }}" {% if selected_color == colour.id %}selected{% endif %}>{{ colour.colour }}</option>
+                {% endfor %}
+                </select>
+            </div>
+            
+                    
+                    <!-- Apply button for desktop view -->
+                    <div class="d-none d-md-block">
+                        <button type="submit" class="btn btn-primary">Apply</button>
+                    </div>
                 </form>
+        
+                <!-- Apply button for mobile view -->
+                <div class="d-md-none mb-3" style="width:10rem">
+                    <button type="submit" form="filter-form" class="btn btn-primary">Apply</button>
+                </div>
             </div>
             <!-- Filter End -->
         </div>
@@ -310,13 +323,18 @@ shop
     </div>
 </div>
 {% block last %}
-<script>
-    $(document).ready(function() {
-        $('.color-checkbox').click(function() {
-            $('.color-checkbox').not(this).prop('checked', false);
-        });
-    });
-    </script>
+<style>
+    /* Styles for the dropdown in mobile view */
+@media (max-width: 767px) {
+  .d-md-none {
+    display: block;
+  }
+  .d-none.d-md-block {
+    display: none;
+  }
+}
+
+</style>
     
 
 {% endblock %}

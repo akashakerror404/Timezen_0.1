@@ -358,7 +358,7 @@ def cancel_order_admin(request, order_id):
         return redirect('admin_order_list')
     else:
         # Refund failed or not processed
-        print("Refund failed or not processed")
+        pass
     order.payment_status = 'CANCELLED'
     order.save()
     return redirect('admin_order_list')
@@ -388,9 +388,9 @@ def update_order_status_admin(request, order_id):
                         buyer_wallet.Wallettotal += userwallet
                         buyer_wallet.save()
                     else:
-                        print("sorry")
+                        pass
                 except Referral.DoesNotExist:
-                    print("Referral does not exist.")
+                    pass
                 # order.payment_status = 'COMPLETED'
                 order.save()
                 return redirect('order_details_admin', order_id=order_id)

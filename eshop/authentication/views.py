@@ -19,7 +19,6 @@ from django.utils.http import urlsafe_base64_decode,urlsafe_base64_encode
 from django.contrib.auth.decorators import user_passes_test, login_required
 from django.views.decorators.cache import cache_control,never_cache
 
-
 def is_user(user):
     return user.is_user
 

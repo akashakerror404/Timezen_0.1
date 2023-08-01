@@ -202,7 +202,6 @@ def order_placed(request,address_id):
         
         varinat=product.product
         varinat.stock -=product.quantity
-        print(varinat.stock)
         varinat.save()
         
 
@@ -214,13 +213,14 @@ def order_placed(request,address_id):
         
         cart_id.coupons = None  # Set the coupons field to NULL
         cart_id.save()
+        
     context={
         'order':order,
         'order_id': order.id
 
     }
-
     return JsonResponse({'order_id': order.id})
+    
 @login_required(login_url='signin') 
 def order_wallet(request,address_id):
     address=Address.objects.get(id=address_id)
@@ -363,7 +363,7 @@ def delete_order(request, order_id):
 
         if order.payment_method == 'CASH_ON_DELIVERY':
             # No refund needed for cash on delivery orders
-            order.payment_status = 'REFUNDED'
+            order.payment_status = 'CANCELLED'
 
         elif order.payment_method == 'WALLET':
             buyer_wallet = Wallet.objects.get(user=user)
@@ -380,10 +380,9 @@ def delete_order(request, order_id):
             if refund_response['status'] == 'processed':
                 # Refund successful
                 order.payment_status = 'REFUNDED'  # Update the payment status to 'REFUNDED'
-                print(f"Order {order_id} refunded successfully")
             else:
                 # Refund failed or not processed
-                print("Refund failed or not processed")
+                pass
 
         order.save()
 
