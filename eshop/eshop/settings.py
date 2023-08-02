@@ -32,9 +32,8 @@ SECRET_KEY = "django-insecure-cs1z^vs(kwrgmtoj2al=i0+3mm)b$8v*4gaag1dly5qjd8u9dq
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
-
+ALLOWED_HOSTS = ['13.50.235.108' , '0.0.0.0' ,'localhost']
+CSRF_TRUSTED_ORIGINS = ['http://13.50.235.108']
 # Application definition
 
 INSTALLED_APPS = [
@@ -55,6 +54,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -64,7 +64,9 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = "eshop.urls"
+CORS_ORIGIN_ALLOW_ALL = True
 
+CORS_ALLOW_CREDENTIALS = True
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
