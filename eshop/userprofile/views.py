@@ -129,7 +129,7 @@ def initiate_payment(request):
     note = {'shipping_address': '123, shipping Street'}
     import razorpay
 
-    client = razorpay.Client(auth=('rzp_test_MZaMhRtV2louDb', 'dT2bluVIx4ea7S7F9xGh8BVN'))
+    client = razorpay.Client(auth=('**********', '***********))
 
     razorpay_order = client.order.create(
         {'amount': order_amount,
@@ -290,7 +290,7 @@ def order_placed_razopay(request, address_id):
         )
 
         # Capture the payment using Razorpay API
-        client = razorpay.Client(auth=('rzp_test_MZaMhRtV2louDb', 'dT2bluVIx4ea7S7F9xGh8BVN'))
+        client = razorpay.Client(auth=('**********', '************'))
         capture_response = client.payment.capture(payment_id, float(total_price) * 100)  # Capture the payment amount
         cart_items = Cart.objects.filter(cart_id=cart_id)
 
@@ -374,7 +374,7 @@ def delete_order(request, order_id):
 
         else:
             # Initiate refund using Razorpay API
-            client = razorpay.Client(auth=('rzp_test_MZaMhRtV2louDb', 'dT2bluVIx4ea7S7F9xGh8BVN'))
+            client = razorpay.Client(auth=('***********', '**********'))
             refund_response = client.payment.refund(order.payment_id, {'amount': int(order.total_price * 100)})
 
             if refund_response['status'] == 'processed':
