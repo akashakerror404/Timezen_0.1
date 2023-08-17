@@ -59,7 +59,7 @@ Follow these steps to clone and explore the Timezen project:
 2. Navigate to your desired directory using the `cd` command.
 3. Run the following command to clone the repository:
 ```sh
-git clone https://github.com/akashakerror404/timezen.git
+git clone https://github.com/akashakerror404/Timezen_0.1.git
 ```
 
 4. Once cloned, navigate to the project directory:
